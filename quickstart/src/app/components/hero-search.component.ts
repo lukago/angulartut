@@ -1,5 +1,6 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {HeroSearchService} from '../services/hero-serarch.service';
+import {SearchService} from '../services/search.service';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import {Hero} from '../models/hero';
@@ -12,22 +13,19 @@ import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
-import {IHERO_SEARCH, IHeroSearchService} from '../models/iherosearch';
 
 @Component({
   selector: 'hero-search',
-  templateUrl: './views/hero-search.component.html',
-  styleUrls: ['./views/hero-search.component.css'],
-  providers: [
-    {provide: IHERO_SEARCH, useValue: HeroSearchService}
-  ]
+  templateUrl: './hero-search.component.html',
+  styleUrls: ['./hero-search.component.css'],
+  providers: [{provide: SearchService, useClass: HeroSearchService}]
 })
 export class HeroSearchComponent implements OnInit {
   heroes: Observable<Hero[]>;
   private searchTerms = new Subject<string>();
 
   constructor(
-    @Inject(IHERO_SEARCH) private heroSearchService: IHeroSearchService,
+    private heroSearchService: SearchService,
     private router: Router
   ) {}
 

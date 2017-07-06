@@ -6,8 +6,8 @@ import {Router}         from '@angular/router';
 
 @Component({
   selector: 'my-heroes',
-  templateUrl: './views/heroes.component.html',
-  styleUrls: [ './views/heroes.component.css' ]
+  templateUrl: './heroes.component.html',
+  styleUrls: [ './heroes.component.css' ]
 })
 export class HeroesComponent implements OnInit {
   selectedHero: Hero;

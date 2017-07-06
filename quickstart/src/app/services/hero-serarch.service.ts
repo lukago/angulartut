@@ -3,12 +3,12 @@ import {Http} from '@angular/http';
 import {Observable} from 'rxjs/Observable';
 import {Hero} from '../models/hero';
 import 'rxjs/add/operator/map';
-import {IHeroSearchService} from '../models/iherosearch';
+import {SearchService} from './search.service';
 
 @Injectable()
-export class HeroSearchService implements IHeroSearchService {
+export class HeroSearchService implements SearchService {
 
-  constructor(private http: Http) {}
+  constructor(private http: Http) { }
 
   search(term: string): Observable<Hero[]> {
     return this.http
