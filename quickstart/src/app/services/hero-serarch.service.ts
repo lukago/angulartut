@@ -3,9 +3,10 @@ import {Http} from '@angular/http';
 import {Observable} from 'rxjs/Observable';
 import {Hero} from '../models/hero';
 import 'rxjs/add/operator/map';
+import {IHeroSearchService} from '../models/iherosearch';
 
 @Injectable()
-export class HeroSearchService {
+export class HeroSearchService implements IHeroSearchService {
 
   constructor(private http: Http) {}
 
