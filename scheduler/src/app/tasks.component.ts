@@ -8,9 +8,14 @@ import {Task} from './task';
   <h2>All tasks list</h2>
   <ul class="tasks">
     <li *ngFor="let task of tasks">
-      <span>{{task.description}} => {{task.time.getFullYear().toString()}}</span>
+      <span class="badge">{{task.id}}</span>
+      <span>
+        {{task.description}}, {{task.place}}, {{task.time.getFullYear()}}
+      </span>
+      <input [(ngModel)]="task.description">
     </li>
   </ul>
+  
   `,
 })
 export class TasksComponent implements OnInit {
@@ -21,6 +26,12 @@ export class TasksComponent implements OnInit {
   ngOnInit(): void {
     this.tasksService.getTasks()
       .then(tasks => tasks.forEach(
-        t => this.tasks.push(new Task(t.id, new Date(t.time), t.description, t.place))));
+        t => this.tasks.push(
+          new Task(
+            t.id,
+            new Date(t.time),
+            t.description,
+            t.place)
+        )));
   }
 }

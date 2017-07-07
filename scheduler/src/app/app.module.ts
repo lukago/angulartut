@@ -8,11 +8,13 @@ import {AppRoutingModule} from './app-routing.module';
 import {TasksService} from './tasks.service';
 import {TasksComponent} from './tasks.component';
 import {HttpModule} from '@angular/http';
+import {FormsModule} from '@angular/forms';
 
 @NgModule({
   imports:      [
     BrowserModule,
     HttpModule,
+    FormsModule,
     InMemoryWebApiModule.forRoot(InMemoryDataService),
     AppRoutingModule
   ],
