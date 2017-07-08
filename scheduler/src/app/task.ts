@@ -6,7 +6,7 @@ export class Task {
 
   constructor(id: number, time: Date, description: string, place: string) {
     this.id = id;
-    this.time = time;
+    this.time = new Date(time);
     this.description = description;
     this.place = place;
   }

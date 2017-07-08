@@ -9,6 +9,8 @@ import {TasksService} from './tasks.service';
 import {TasksComponent} from './tasks.component';
 import {HttpModule} from '@angular/http';
 import {FormsModule} from '@angular/forms';
+import {DashboardComponent} from './dashboard.component';
+import {TaskDetailComponent} from './task-detail.component';
 
 @NgModule({
   imports:      [
@@ -20,7 +22,9 @@ import {FormsModule} from '@angular/forms';
   ],
   declarations: [
     AppComponent,
-    TasksComponent
+    TasksComponent,
+    DashboardComponent,
+    TaskDetailComponent
   ],
   providers:    [ TasksService ],
   bootstrap:    [ AppComponent ]

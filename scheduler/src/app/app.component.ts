@@ -10,4 +10,4 @@ import { Component } from '@angular/core';
     <router-outlet></router-outlet>
   `,
 })
-export class AppComponent  { name = 'Scheduler App'; }
+export class AppComponent  { }

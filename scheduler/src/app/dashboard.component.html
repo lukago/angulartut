@@ -1,0 +1,9 @@
+<h1>Next events</h1>
+<div class="grid grid-pad">
+  <div *ngFor="let t of tasksDs" class="col-1-2">
+    <div class="module task">
+      <h4>{{t.id}}, {{t.description}}, {{t.time.getFullYear()}}</h4>
+    </div>
+  </div>
+  <button (click)="sortHandler()">Sort</button>
+</div>

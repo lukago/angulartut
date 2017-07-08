@@ -10,9 +10,13 @@ export class TasksService {
   constructor(private http: Http) {}
 
   getTasks(): Promise<Task[]> {
+    let tasks: Task[] = [];
+
     return this.http.get(this.apiUrl)
       .toPromise()
-      .then(response => response.json().data as Task[])
+      .then(response => response.json().data.forEach(
+        (t: Task) => tasks.push(new Task(t.id, t.time, t.description, t.place))))
+      .then(() => Promise.resolve(tasks))
       .catch(this.handleError);
   }
 

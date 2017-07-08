@@ -5,33 +5,30 @@ import {Task} from './task';
 @Component({
   selector: 'tasks-list',
   template: `
-  <h2>All tasks list</h2>
+  <h1>All tasks list</h1>
   <ul class="tasks">
-    <li *ngFor="let task of tasks">
+    <li *ngFor="let task of tasks" (click)="gotoDetail(task)">
       <span class="badge">{{task.id}}</span>
       <span>
         {{task.description}}, {{task.place}}, {{task.time.getFullYear()}}
       </span>
-      <input [(ngModel)]="task.description">
     </li>
   </ul>
-  
+  <task-detail [task]="selectedTask"></task-detail>
   `,
 })
 export class TasksComponent implements OnInit {
   tasks: Task[] = [];
+  selectedTask: Task;
 
   constructor(private tasksService: TasksService) {}
 
   ngOnInit(): void {
     this.tasksService.getTasks()
-      .then(tasks => tasks.forEach(
-        t => this.tasks.push(
-          new Task(
-            t.id,
-            new Date(t.time),
-            t.description,
-            t.place)
-        )));
+      .then(tasks => this.tasks = tasks);
+  }
+
+  gotoDetail(task: Task): void {
+    this.selectedTask = task;
   }
 }
