@@ -35,18 +35,7 @@ export class InMemoryDataService implements InMemoryDbService {
         place: 'xD xD xD'
       }
     ];
-    //this.sleep(10000);
     return {tasks};
-  }
-
-  sleep(millis: number): void {
-    var start = new Date().getTime();
-    for (var i = 0; i < 1e7; i++) {
-      console.log('e');
-      if ((new Date().getTime() - start) > millis) {
-        break;
-      }
-    }
   }
 }
 

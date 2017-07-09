@@ -1,5 +1,8 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {Task} from './task';
+import {ActivatedRoute, ParamMap, Router} from '@angular/router';
+import {TasksService} from './tasks.service';
+import 'rxjs/add/operator/switchMap';
 
 @Component({
   selector: 'task-detail',
@@ -13,6 +16,18 @@ import {Task} from './task';
     </div>
   `
 })
-export class TaskDetailComponent {
+export class TaskDetailComponent implements OnInit {
   @Input() task: Task;
+
+  constructor(
+    private route: ActivatedRoute,
+    private tasksService: TasksService
+  ) { }
+
+  ngOnInit(): void {
+    this.route.paramMap
+      .switchMap((params: ParamMap) =>
+        this.tasksService.getTask(+params.get('id')))
+      .subscribe(task => this.task = task);
+  }
 }

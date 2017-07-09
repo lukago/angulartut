@@ -6,17 +6,28 @@ import {Task} from './task';
 @Injectable()
 export class TasksService {
   apiUrl = 'api/tasks';
+  tasks: Task[];
 
   constructor(private http: Http) {}
 
-  getTasks(): Promise<Task[]> {
-    let tasks: Task[] = [];
+  getTasks(refresh?: boolean): Promise<Task[]> {
 
-    return this.http.get(this.apiUrl)
-      .toPromise()
-      .then(response => response.json().data.forEach(
-        (t: Task) => tasks.push(new Task(t.id, t.time, t.description, t.place))))
-      .then(() => Promise.resolve(tasks))
+    if (refresh || !this.tasks) {
+      this.tasks = [];
+      return this.http.get(this.apiUrl)
+        .toPromise()
+        .then(response => response.json().data.forEach(
+          (t: Task) => this.tasks.push(new Task(t.id, t.time, t.description, t.place))))
+        .then(() => Promise.resolve(this.tasks))
+        .catch(this.handleError);
+    } else {
+      return Promise.resolve(this.tasks);
+    }
+  }
+
+  getTask(id: number): Promise<Task> {
+    return this.getTasks()
+      .then(tasks => tasks.find(t => t.id === id))
       .catch(this.handleError);
   }
 
