@@ -1,22 +1,31 @@
 <div class="container">
-  <h1>Home</h1>
-  <div class="row">
+  <div class="row content">
+
     <div class="col-md-6">
-      <h2>Groups</h2>
-      <div *ngFor="let group of groups" class="col-md-12">
-        <span class="badge">{{group.title}}</span>
-        <span>({{group.tasks.length}})</span>
-      </div>
+      <h3 class="text-center well">Tasks</h3>
+      <ul class="nav nav-pills nav-stacked well">
+        <li *ngFor="let task of tasks" class="col-md-12 text-center well well-sm">
+          <a href="/home">{{task.title}}</a>
+        </li>
+        <button type="submit" class="btn btn-success btn-lg btn-block"
+                (click)="gotoAddTask()">+</button>
+      </ul>
     </div>
+
     <div class="col-md-6">
-      <h2>Upcoming tasks</h2>
-      <div *ngFor="let task of allTasks" class="col-md-12">
-        <span class="badge">{{task.title}}</span>
-        <span>
-          {{task.note}}, {{task.priority}}
-        </span>
-        <span>({{task.startDate}})</span>
-      </div>
+      <h3 class="text-center well">Groups</h3>
+      <ul class="nav nav-pills nav-stacked well">
+        <li *ngFor="let group of groups" class="col-md-12 text-center well well-sm">
+          <a href="/home">{{group.title}}
+            <span class="badge">{{group.tasks.length}}</span>
+          </a>
+        </li>
+        <button type="submit" class="btn btn-success btn-lg btn-block"
+                (click)="gotoAddGroup()">+</button>
+      </ul>
     </div>
+
+
   </div>
+
 </div>

@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Group} from './Group';
 import {Task} from './Task';
 import {GroupService} from './group.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app',
@@ -9,32 +10,29 @@ import {GroupService} from './group.service';
 })
 export class HomeComponent implements OnInit {
   groups: Group[];
-  allTasks: Task[];
+  tasks: Task[];
 
-  constructor(private groupService: GroupService) {
-    this.allTasks = [];
+  constructor(
+    private groupService: GroupService,
+    private router: Router
+  ) {
+    this.tasks = [];
     this.groups = [];
   }
 
   ngOnInit(): void {
     this.groupService.getGroups()
-      .then(groups => this.groups = groups)
-      .then(() => this.fetchTasksFromGroups());
-    console.log(this.allTasks);
+      .then(groups => this.groups = groups);
+
+    this.groupService.getTasksDistinct()
+      .then(tasks => this.tasks = tasks);
   }
 
-  private fetchTasksFromGroups() {
-    this.groups.forEach(gr => gr.tasks.forEach(
-      t => this.allTasks.push(t)));
+  gotoAddTask() {
+    this.router.navigateByUrl('/add-task');
+  }
 
-    // make disctinct todo
-    let it = 0;
-    for(let i = 0; i < this.allTasks.length; i++) {
-      for(let j = 0; j < this.allTasks.length; j++) {
-        if (this.allTasks[i] === this.allTasks[j]) {
-          it++;
-        }
-      }
-    }
+  gotoAddGroup() {
+    this.router.navigateByUrl('/add-group');
   }
 }
