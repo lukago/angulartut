@@ -3,29 +3,46 @@
 
     <div class="col-md-6">
       <h3 class="text-center well">Tasks</h3>
-      <ul class="nav nav-pills nav-stacked well">
-        <li *ngFor="let task of tasks" class="col-md-12 text-center well well-sm">
-          <a href="/home">{{task.title}}</a>
-        </li>
+      <div class="nav nav-pills nav-stacked well">
+        <div class="table">
+          <table class="table table-hover">
+            <thead>
+            <tr>
+              <th class="text-center">#</th>
+              <th class="text-center">Title</th>
+              <th class="text-center">Date</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let task of tasks">
+              <td class="text-center">{{task.id}}</td>
+              <td class="text-center">{{task.title}}</td>
+              <td class="text-center">
+                {{task.startDate.getDay()}}/
+                {{task.startDate.getMonth()}}/
+                {{task.startDate.getFullYear()}}
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
         <button type="submit" class="btn btn-success btn-lg btn-block"
                 (click)="gotoAddTask()">+</button>
-      </ul>
+      </div>
     </div>
 
     <div class="col-md-6">
       <h3 class="text-center well">Groups</h3>
-      <ul class="nav nav-pills nav-stacked well">
-        <li *ngFor="let group of groups" class="col-md-12 text-center well well-sm">
-          <a href="/home">{{group.title}}
+      <div class="nav nav-pills nav-stacked well">
+        <div *ngFor="let group of groups" class="col-md-12 text-center well well-sm">
+          <a routerLink="/home">{{group.title}}
             <span class="badge">{{group.tasks.length}}</span>
           </a>
-        </li>
+        </div>
         <button type="submit" class="btn btn-success btn-lg btn-block"
                 (click)="gotoAddGroup()">+</button>
-      </ul>
+      </div>
     </div>
-
-
   </div>
 
 </div>
