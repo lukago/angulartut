@@ -1,0 +1,22 @@
+<div class="container">
+  <h1>Home</h1>
+  <div class="row">
+    <div class="col-md-6">
+      <h2>Groups</h2>
+      <div *ngFor="let group of groups" class="col-md-12">
+        <span class="badge">{{group.title}}</span>
+        <span>({{group.tasks.length}})</span>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <h2>Upcoming tasks</h2>
+      <div *ngFor="let task of allTasks" class="col-md-12">
+        <span class="badge">{{task.title}}</span>
+        <span>
+          {{task.note}}, {{task.priority}}
+        </span>
+        <span>({{task.startDate}})</span>
+      </div>
+    </div>
+  </div>
+</div>
