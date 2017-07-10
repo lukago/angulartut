@@ -12,7 +12,7 @@ export class DashboardComponent implements OnInit {
   constructor(private tasksService: TasksService) { }
 
   ngOnInit(): void {
-    this.tasksService.getTasks(true)
+    this.tasksService.getTasks()
       .then(tasks => this.tasksDs = this.sliceTasks(tasks))
       .then(() => this.sortHandler());
   }
@@ -20,8 +20,7 @@ export class DashboardComponent implements OnInit {
   private sliceTasks(tasks: Task[]) {
     return tasks
       .sort((a, b) => a.time.getTime() - b.time.getTime())
-      .filter(task => task.time.getTime() > Date.now())
-      .slice(0, 2);
+      .filter(task => task.time.getTime() > Date.now());
   }
 
   private sortHandler(): void {

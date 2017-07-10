@@ -1,10 +1,10 @@
-import {Injectable} from '@angular/core';
+import {Injectable, OnDestroy} from '@angular/core';
 import {Http} from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 import {Task} from './task';
 
 @Injectable()
-export class TasksService {
+export class TasksService implements OnDestroy {
   apiUrl = 'api/tasks';
   tasks: Task[];
 
@@ -34,5 +34,9 @@ export class TasksService {
   handleError(error: any): Promise<any> {
     console.log('error while geting data from WebAPI', error);
     return Promise.reject(error.message || error);
+  }
+
+  ngOnDestroy(): void {
+    localStorage.setItem('tasks', JSON.stringify(this.getTasks(true)));
   }
 }

@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {Injectable, OnDestroy} from '@angular/core';
 
 import {Hero} from    '../models/hero';
 import {Headers, Http} from    '@angular/http';
@@ -34,6 +34,7 @@ export class HeroService {
     return this.http
       .put(url, JSON.stringify(hero), {headers: this.headers})
       .toPromise()
+      .then(() => this.getHeroes().then(heroes => localStorage.setItem('heroes', JSON.stringify(heroes))))
       .then(() => hero)
       .catch(this.handleError);
   }
