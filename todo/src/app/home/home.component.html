@@ -1,0 +1,14 @@
+<div class="container">
+  <div class="row content">
+
+    <div class="col-md-6">
+      <tasks (updated)="onTasksUpdate($event)"
+             [updateView]="updateTasksView"></tasks>
+    </div>
+
+    <div class="col-md-6">
+      <groups (updated)="onGroupsUpdate($event)"
+        [updateView]="updateGroupsView"></groups>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,39 @@
+<h3 class="text-center well">Groups</h3>
+<div class="nav nav-pills nav-stacked well">
+  <div class="table">
+    <table class="table table-hover">
+      <thead>
+      <tr>
+        <th class="text-center">#</th>
+        <th class="text-center">Title</th>
+        <th></th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let group of groups">
+        <td class="text-center">{{group.id}}</td>
+        <td class="text-center">{{group.title}}</td>
+        <td class="text-center">
+          <button class="btn btn-primary btn-sm"
+                  (click)="gotoGroupEditor(group.id)">Edit</button>
+        </td>
+        <td class="text-center">
+          <button class="btn btn-danger btn-sm"
+                  (click)="deleteGroup(group)">-</button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <button *ngIf="!showAddMenu" type="submit"
+          class="btn btn-success btn-lg btn-block"
+          (click)="gotoAddGroup()">+</button>
+  <div *ngIf="showAddMenu" class="well">
+    <h4>Add group...</h4>
+    <div class="well">
+      <label>Group name:</label> <input #groupName/>
+      <button (click)="addGroup(groupName.value)">Add group</button>
+    </div>
+  </div>
+</div>

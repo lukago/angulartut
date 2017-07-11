@@ -1,0 +1,17 @@
+<div class="container text-center">
+  <div *ngIf="group">
+    <h2>{{group.title}} editor...</h2>
+    <div>
+      <label>id: </label>{{group.id}}
+    </div>
+    <div>
+      <label>title: </label>
+      <input [(ngModel)]="group.title" placeholder="tilte...">
+    </div>
+    <button (click)="goBack()">Back</button>
+    <button (click)="saveToDb()">Save</button>
+  </div>
+  <div>
+    <tasks [tasks]="tasks" [useDb]="false"></tasks>
+  </div>
+</div>
