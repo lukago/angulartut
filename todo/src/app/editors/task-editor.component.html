@@ -1,0 +1,38 @@
+<div class="container">
+  <div *ngIf="task" class="well">
+    <h2>Task: {{task.title}}</h2>
+    <div class="form-group row">
+
+      <label class="col-md-3 col-form-label">Title:</label>
+      <div class="col-md-9">
+        <input [(ngModel)]="task.title" class="form-control" type="text"/>
+      </div>
+
+      <label class="col-md-3 col-form-label">Date:</label>
+      <div class="col-md-9">
+        <input [(ngModel)]="dateStr" class="form-control" type="datetime-local">
+      </div>
+
+      <label class="col-md-3 col-form-label">Note:</label>
+      <div class="col-md-9">
+        <input [(ngModel)]="task.note" class="form-control" type="text">
+      </div>
+
+      <label class="col-md-3 col-form-label">Priority:</label>
+      <div class="col-md-9">
+        <input [(ngModel)]="task.priority" class="form-control" type="number">
+      </div>
+
+      <label class="col-md-3 col-form-label">Group name:</label>
+      <div class="col-md-9">
+        <select class="form-control" [(ngModel)]="task.groupId">
+          <option *ngFor="let group of groups" [value]="group.id">
+            {{group.title}}
+          </option>
+        </select>
+      </div>
+    </div>
+    <button (click)="goBack()" class="btn btn-primary">Back</button>
+    <button (click)="saveToDb()" class="btn btn-success">Save</button>
+  </div>
+</div>

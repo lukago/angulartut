@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {GroupService} from '../services/group.service';
 import {ActivatedRoute, ParamMap} from '@angular/router';
 import {Group} from '../models/Group';

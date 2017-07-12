@@ -12,6 +12,8 @@ import {GroupsComponent} from '../home/groups.component';
 import {TasksComponent} from '../home/tasks.component';
 import {GroupEditorComponent} from '../editors/group-editor.component';
 import {FormsModule} from '@angular/forms';
+import {TaskEditorComponent} from '../editors/task-editor.component';
+import {SearchComponent} from '../navbar/search.component';
 
 @NgModule({
   imports:      [
@@ -26,7 +28,9 @@ import {FormsModule} from '@angular/forms';
     HomeComponent,
     GroupsComponent,
     TasksComponent,
-    GroupEditorComponent
+    GroupEditorComponent,
+    TaskEditorComponent,
+    SearchComponent,
   ],
   providers:    [ GroupService ],
   bootstrap:    [ AppComponent ]

@@ -1,6 +1,6 @@
 <h3 class="text-center well">Groups</h3>
 <div class="nav nav-pills nav-stacked well">
-  <div class="table">
+  <div class="table-responsive">
     <table class="table table-hover">
       <thead>
       <tr>
@@ -30,10 +30,11 @@
           class="btn btn-success btn-lg btn-block"
           (click)="gotoAddGroup()">+</button>
   <div *ngIf="showAddMenu" class="well">
-    <h4>Add group...</h4>
+    <h4>Add new group</h4>
     <div class="well">
       <label>Group name:</label> <input #groupName/>
-      <button (click)="addGroup(groupName.value)">Add group</button>
+      <button class="btn btn-success"
+        (click)="addGroup(groupName.value)">Add</button>
     </div>
   </div>
 </div>

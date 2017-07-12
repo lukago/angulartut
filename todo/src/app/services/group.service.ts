@@ -9,8 +9,7 @@ export class GroupService {
   groupsUrl = 'api/groups';
   tasksUrl = 'api/tasks';
 
-  constructor(private http: Http) {
-  }
+  constructor(private http: Http) { }
 
   getGroups(): Promise<Group[]> {
     let groups: Group[] = [];
@@ -40,6 +39,23 @@ export class GroupService {
       .post(this.groupsUrl, JSON.stringify({title: title, tasks: []}))
       .toPromise()
       .then(res => res.json().data as Group)
+      .catch(this.handleError);
+  }
+
+  createTask(task: Task): Promise<Task> {
+    return this.http
+      .post(this.tasksUrl, JSON.stringify(task))
+      .toPromise()
+      .then(() => Promise.resolve(task))
+      .catch(this.handleError);
+  }
+
+  updateTask(task: Task): Promise<Task> {
+    let url = `${this.tasksUrl}/${task.id}`;
+    return this.http
+      .put(url, JSON.stringify(task))
+      .toPromise()
+      .then(() => task)
       .catch(this.handleError);
   }
 
@@ -90,6 +106,21 @@ export class GroupService {
         (t: Task) => tasks.push(
           new Task(t.id, t.title, t.startDate, t.note, t.priority, t.groupId))))
       .then(() => Promise.resolve(tasks));
+  }
+
+  getTask(id: number): Promise<Task> {
+    let url = `${this.tasksUrl}/${id}`;
+    let task: Task;
+    return this.http.get(url)
+      .toPromise()
+      .then(res => {
+        let data = res.json().data as Task;
+        task = new Task(data.id, data.title,
+          data.startDate, data.note, data.priority,
+          data.groupId);
+      })
+      .then(() => Promise.resolve(task))
+      .catch(this.handleError);
   }
 
   handleError(error: any): Promise<any> {

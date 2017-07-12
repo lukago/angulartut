@@ -1,15 +1,16 @@
-<div class="container text-center">
-  <div *ngIf="group">
-    <h2>{{group.title}} editor...</h2>
-    <div>
-      <label>id: </label>{{group.id}}
+<div class="container">
+  <div *ngIf="group" class="well">
+    <h2>Group: {{group.title}}</h2>
+    <div class="form-group row">
+      <label class="col-md-4 col-form-label">Group Title: </label>
+      <div class="col-md-8">
+        <input [(ngModel)]="group.title" class="form-control"
+               type="text"
+               placeholder="tilte...">
+      </div>
     </div>
-    <div>
-      <label>title: </label>
-      <input [(ngModel)]="group.title" placeholder="tilte...">
-    </div>
-    <button (click)="goBack()">Back</button>
-    <button (click)="saveToDb()">Save</button>
+    <button (click)="goBack()" class="btn btn-primary">Back</button>
+    <button (click)="saveToDb()" class="btn btn-success">Save</button>
   </div>
   <div>
     <tasks [tasks]="tasks" [useDb]="false"></tasks>

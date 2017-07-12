@@ -1,12 +1,14 @@
 <h3 class="text-center well">Tasks</h3>
 <div class="nav nav-pills nav-stacked well">
-  <div class="table">
+  <div class="table-responsive">
     <table class="table table-hover">
       <thead>
       <tr>
         <th class="text-center">#</th>
         <th class="text-center">Title</th>
         <th class="text-center">Date</th>
+        <th *ngIf="!useDb" class="text-center">Note</th>
+        <th *ngIf="!useDb" class="text-center">Priority</th>
         <th></th>
         <th></th>
       </tr>
@@ -15,22 +17,61 @@
       <tr *ngFor="let task of tasks">
         <td class="text-center">{{task.id}}</td>
         <td class="text-center">{{task.title}}</td>
-        <td class="text-center">
-          {{task.startDate.getDay()}}/
-          {{task.startDate.getMonth()}}/
-          {{task.startDate.getFullYear()}}
+        <td *ngIf="useDb" class="text-center">
+          {{task.startDate.toLocaleDateString()}}
         </td>
+        <td *ngIf="!useDb" class="text-center">
+          {{task.startDate.toLocaleDateString()}} {{task.startDate.toLocaleTimeString()}}
+        </td>
+        <td *ngIf="!useDb" class="text-center">{{task.note}}</td>
+        <td *ngIf="!useDb" class="text-center">{{task.priority}}</td>
         <td class="text-center">
-          <button class="btn btn-primary btn-sm">Edit</button>
+          <button class="btn btn-primary btn-sm"
+                  (click)="gotoTaskEditor(task.id)">Edit</button>
         </td>
         <td class="text-center">
           <button class="btn btn-danger btn-sm"
-                  (click)="deleteTask(task)">-</button>
+                  (click)="deleteTask(task)">-
+          </button>
         </td>
       </tr>
       </tbody>
     </table>
   </div>
-  <button type="submit" class="btn btn-success btn-lg btn-block"
-          (click)="gotoAddTask()">+</button>
+  <button *ngIf="!showAddMenu" type="submit"
+          class="btn btn-success btn-lg btn-block"
+          (click)="gotoAddTask()">+
+  </button>
+  <div *ngIf="showAddMenu" class="well">
+    <h4>Add new task</h4>
+    <div class="well">
+      <div class="form-group row">
+        <label for="title" class="col-md-3 col-form-label">Title:</label>
+        <div class="col-md-9"><input class="form-control" type="text" #title/></div>
+
+        <label for="date" class="col-md-3 col-form-label">Date:</label>
+        <div class="col-md-9"><input class="form-control" type="datetime-local" #date></div>
+
+        <label for="note" class="col-md-3 col-form-label">Note:</label>
+        <div class="col-md-9"><input class="form-control" type="text" #note/></div>
+
+        <label for="prio" class="col-md-3 col-form-label">Priority:</label>
+        <div class="col-md-9"><input class="form-control" type="number" #prio/></div>
+
+        <label for="gid" class="col-md-3 col-form-label">Group name:</label>
+        <div class="col-md-9">
+          <select class="form-control" #gid>
+            <option *ngFor="let group of groups" [value]="group.id">
+              {{group.title}}
+            </option>
+          </select>
+        </div>
+      </div>
+      <button class="btn btn-success btn-block"
+              (click)="addTask(title.value, date.value,
+                  note.value, prio.value, gid.value)">
+        Add
+      </button>
+    </div>
+  </div>
 </div>
