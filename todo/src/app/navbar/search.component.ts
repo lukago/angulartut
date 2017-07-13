@@ -22,10 +22,9 @@ export class SearchComponent implements OnInit {
   tasks: Observable<Task[]>;
   private searchTerms = new Subject<string>();
 
-  constructor(
-    private searchService: SearchService,
-    private router: Router
-  ) {}
+  constructor(private searchService: SearchService,
+              private router: Router) {
+  }
 
   search(term: string): void {
     this.searchTerms.next(term);

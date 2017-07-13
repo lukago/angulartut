@@ -10,7 +10,8 @@ export class InMemoryDataService implements InMemoryDbService {
         startDate: '2016-04-11T10:20:10Z',
         note: 'Fast',
         priority: 2,
-        groupId: 0
+        groupId: 0,
+        status: false
       },
       {
         id: 1,
@@ -18,7 +19,8 @@ export class InMemoryDataService implements InMemoryDbService {
         startDate: '2017-09-11T11:20:30Z',
         note: 'Long',
         priority: 1,
-        groupId: 1
+        groupId: 1,
+        status: false
       },
       {
         id: 2,
@@ -26,7 +28,8 @@ export class InMemoryDataService implements InMemoryDbService {
         startDate: '2019-04-11T12:20:30Z',
         note: 'Lunch fast',
         priority: 3,
-        groupId: 1
+        groupId: 1,
+        status: true
       },
       {
         id: 3,
@@ -34,7 +37,8 @@ export class InMemoryDataService implements InMemoryDbService {
         startDate: '2018-04-11T10:30:30Z',
         note: 'Long',
         priority: 2,
-        groupId: 1
+        groupId: 1,
+        status: false
       }
     ];
 

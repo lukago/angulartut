@@ -1,25 +1,31 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
+import {
+  Component, EventEmitter, Input,
+  OnChanges, OnInit, Output
+} from '@angular/core';
 import {Group} from '../models/Group';
 import {GroupService} from '../services/group.service';
 import {Router} from '@angular/router';
 import {Task} from '../models/Task';
+import {SortService} from '../services/sort.service';
 
 
 @Component({
   selector: 'groups',
-  templateUrl: './groups.component.html'
+  templateUrl: './groups.component.html',
+  providers: [SortService]
 })
 export class GroupsComponent implements OnInit, OnChanges {
   groups: Group[] = [];
-  showAddMenu: boolean = false;
 
   @Output() updated = new EventEmitter<boolean>();
   @Input() updateView: boolean;
 
-  constructor(
-    private groupService: GroupService,
-    private router: Router
-  ) { }
+  showAddMenu: boolean = false;
+
+  constructor(private groupService: GroupService,
+              private router: Router,
+              private sortService: SortService) {
+  }
 
   ngOnInit(): void {
     this.groups = [];
@@ -28,11 +34,7 @@ export class GroupsComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(): void {
-      this.ngOnInit();
-  }
-
-  gotoAddGroup(): void {
-    this.showAddMenu = true;
+    this.ngOnInit();
   }
 
   gotoGroupEditor(id: number): void {
@@ -40,9 +42,13 @@ export class GroupsComponent implements OnInit, OnChanges {
   }
 
   addGroup(name: string): void {
+    if (!name) {
+      return;
+    }
+
     this.showAddMenu = false;
     name = name.trim();
-    if (!name) {return; }
+
     this.groupService.createGroup(name)
       .then(group => this.groups.push(group));
   }
@@ -57,5 +63,13 @@ export class GroupsComponent implements OnInit, OnChanges {
       .deleteGroup(group.id)
       .then(() => this.groups = this.groups.filter(gr => gr !== group))
       .then(() => this.updated.emit(true));
+  }
+
+  sortGroupsById() {
+    this.sortService.sortGroupsById(this.groups);
+  }
+
+  sortGroupsByName() {
+    this.sortService.sortGroupsByName(this.groups);
   }
 }

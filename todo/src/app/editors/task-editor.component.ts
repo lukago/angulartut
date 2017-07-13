@@ -3,8 +3,9 @@ import {GroupService} from '../services/group.service';
 import {ActivatedRoute, ParamMap} from '@angular/router';
 import {Group} from '../models/Group';
 import {Location} from '@angular/common';
-import 'rxjs/add/operator/switchMap';
 import {Task} from '../models/Task';
+
+import 'rxjs/add/operator/switchMap';
 
 @Component({
   selector: 'task-editor',
@@ -27,9 +28,10 @@ export class TaskEditorComponent implements OnInit {
         this.groupService.getTask(+params.get('id')))
       .subscribe(task => {
         this.task = task;
-        this.initDateStr();
+        this.dateStr =
+          this.getISOstringNoZone(this.task.startDate);
         this.groupService.getGroups()
-          .then(groups => this.groups = groups )
+          .then(groups => this.groups = groups)
           .then(() => this.group =
             this.groups.find(gr => gr.id === task.id));
       });
@@ -39,12 +41,12 @@ export class TaskEditorComponent implements OnInit {
     this.location.back();
   }
 
-  initDateStr() {
-    let str = this.task.startDate.toISOString();
-    this.dateStr = str.substring(0, str.length - 2);
+  getISOstringNoZone(date: Date): string {
+    let str = date.toISOString();
+    return str.substring(0, str.length - 2);
   }
 
-  saveToDb(): void {
+  saveTaskChanges(): void {
     this.task.startDate = new Date(this.dateStr);
     this.groupService.updateTask(this.task)
       .then(() => this.goBack());

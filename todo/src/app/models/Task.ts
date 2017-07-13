@@ -5,23 +5,23 @@ export class Task {
   note: string;
   priority: number;
   groupId: number;
+  status: boolean;
 
   constructor(id: number, title: string, startDate: Date,
-              note: string, priority: number, groupId: number) {
+              note: string, priority: number, groupId: number,
+              status: boolean) {
     this.id = id;
     this.title = title;
     this.startDate = new Date(startDate);
     this.note = note;
     this.priority = priority;
     this.groupId = groupId;
+    this.status = status;
   }
 
   equals(task: Task): boolean {
-    if (this.startDate.getTime() === task.startDate.getTime()
+    return this.startDate.getTime() === task.startDate.getTime()
       && this.title === task.title
-      && this.note === task.note) {
-      return true;
-    }
-    return false;
+      && this.note === task.note;
   }
 }

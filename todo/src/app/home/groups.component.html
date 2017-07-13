@@ -4,8 +4,12 @@
     <table class="table table-hover">
       <thead>
       <tr>
-        <th class="text-center">#</th>
-        <th class="text-center">Title</th>
+        <th class="text-center">
+          <button (click)="sortGroupsById()">#</button>
+        </th>
+        <th class="text-center">
+          <button (click)="sortGroupsByName()">Title</button>
+        </th>
         <th></th>
         <th></th>
       </tr>
@@ -16,11 +20,13 @@
         <td class="text-center">{{group.title}}</td>
         <td class="text-center">
           <button class="btn btn-primary btn-sm"
-                  (click)="gotoGroupEditor(group.id)">Edit</button>
+                  (click)="gotoGroupEditor(group.id)">Edit
+          </button>
         </td>
         <td class="text-center">
           <button class="btn btn-danger btn-sm"
-                  (click)="deleteGroup(group)">-</button>
+                  (click)="deleteGroup(group)">-
+          </button>
         </td>
       </tr>
       </tbody>
@@ -28,13 +34,23 @@
   </div>
   <button *ngIf="!showAddMenu" type="submit"
           class="btn btn-success btn-lg btn-block"
-          (click)="gotoAddGroup()">+</button>
+          (click)="showAddMenu=true">+
+  </button>
   <div *ngIf="showAddMenu" class="well">
     <h4>Add new group</h4>
     <div class="well">
-      <label>Group name:</label> <input #groupName/>
-      <button class="btn btn-success"
-        (click)="addGroup(groupName.value)">Add</button>
+      <div class="form-group row">
+        <label class="col-md-3 col-form-label">Group name:</label>
+        <div class="col-md-9">
+          <input class="form-control" type="text" #groupName/>
+        </div>
+      </div>
+      <button class="btn btn-success btn-block"
+              (click)="addGroup(groupName.value)">Add
+      </button>
+      <button class="btn btn-danger btn-block"
+              (click)="showAddMenu=false">Cancel
+      </button>
     </div>
   </div>
 </div>

@@ -4,11 +4,24 @@
     <table class="table table-hover">
       <thead>
       <tr>
-        <th class="text-center">#</th>
-        <th class="text-center">Title</th>
-        <th class="text-center">Date</th>
-        <th *ngIf="!useDb" class="text-center">Note</th>
-        <th *ngIf="!useDb" class="text-center">Priority</th>
+        <th class="text-center">
+          <button (click)="sortTasksById()">#</button>
+        </th>
+        <th class="text-center">
+          <button (click)="sortTasksByTitle()">Title</button>
+        </th>
+        <th class="text-center">
+          <button (click)="sortTasksByDate()">Date</button>
+        </th>
+        <th *ngIf="!useDb" class="text-center">
+          <button (click)="sortTasksByNote()">Note</button>
+        </th>
+        <th *ngIf="!useDb" class="text-center">
+          <button (click)="sortTasksByPrio()">Priority</button>
+        </th>
+        <th *ngIf="!useDb" class="text-center">
+          <button (click)="sortTasksByStatus()">Status</button>
+        </th>
         <th></th>
         <th></th>
       </tr>
@@ -21,13 +34,18 @@
           {{task.startDate.toLocaleDateString()}}
         </td>
         <td *ngIf="!useDb" class="text-center">
-          {{task.startDate.toLocaleDateString()}} {{task.startDate.toLocaleTimeString()}}
+          {{task.startDate.toLocaleDateString()}}
+          {{task.startDate.toLocaleTimeString()}}
         </td>
         <td *ngIf="!useDb" class="text-center">{{task.note}}</td>
         <td *ngIf="!useDb" class="text-center">{{task.priority}}</td>
+        <td *ngIf="!useDb" class="text-center">
+          {{task.status ? 'Done' : 'To do'}}
+        </td>
         <td class="text-center">
           <button class="btn btn-primary btn-sm"
-                  (click)="gotoTaskEditor(task.id)">Edit</button>
+                  (click)="gotoTaskEditor(task.id)">Edit
+          </button>
         </td>
         <td class="text-center">
           <button class="btn btn-danger btn-sm"
@@ -40,25 +58,38 @@
   </div>
   <button *ngIf="!showAddMenu" type="submit"
           class="btn btn-success btn-lg btn-block"
-          (click)="gotoAddTask()">+
+          (click)="showAddMenu=true">+
   </button>
   <div *ngIf="showAddMenu" class="well">
     <h4>Add new task</h4>
     <div class="well">
       <div class="form-group row">
-        <label for="title" class="col-md-3 col-form-label">Title:</label>
-        <div class="col-md-9"><input class="form-control" type="text" #title/></div>
+        <label class="col-md-3 col-form-label">Title:</label>
+        <div class="col-md-9"><input class="form-control" type="text" #title/>
+        </div>
 
-        <label for="date" class="col-md-3 col-form-label">Date:</label>
-        <div class="col-md-9"><input class="form-control" type="datetime-local" #date></div>
+        <label class="col-md-3 col-form-label">Date:</label>
+        <div class="col-md-9"><input class="form-control" type="datetime-local"
+                                     #date [value]="today"></div>
 
-        <label for="note" class="col-md-3 col-form-label">Note:</label>
-        <div class="col-md-9"><input class="form-control" type="text" #note/></div>
+        <label class="col-md-3 col-form-label">Note:</label>
+        <div class="col-md-9"><input class="form-control" type="text" #note/>
+        </div>
 
-        <label for="prio" class="col-md-3 col-form-label">Priority:</label>
-        <div class="col-md-9"><input class="form-control" type="number" #prio/></div>
+        <label class="col-md-3 col-form-label">Priority:</label>
+        <div class="col-md-9"><input class="form-control" type="number"
+                                     #prio [value]=0 />
+        </div>
 
-        <label for="gid" class="col-md-3 col-form-label">Group name:</label>
+        <label class="col-md-3 col-form-label">Status:</label>
+        <div class="col-md-9">
+          <select class="form-control" #status>
+            <option [value]="true">Done</option>
+            <option [value]="false">Not done</option>
+          </select>
+        </div>
+
+        <label class="col-md-3 col-form-label">Group name:</label>
         <div class="col-md-9">
           <select class="form-control" #gid>
             <option *ngFor="let group of groups" [value]="group.id">
@@ -66,11 +97,16 @@
             </option>
           </select>
         </div>
+
       </div>
       <button class="btn btn-success btn-block"
               (click)="addTask(title.value, date.value,
-                  note.value, prio.value, gid.value)">
+                  note.value, prio.value, gid.value, status.value)">
         Add
+      </button>
+      <button class="btn btn-danger btn-block"
+              (click)="showAddMenu=false">
+        Cancel
       </button>
     </div>
   </div>

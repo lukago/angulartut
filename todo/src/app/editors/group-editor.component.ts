@@ -3,8 +3,9 @@ import {GroupService} from '../services/group.service';
 import {ActivatedRoute, ParamMap} from '@angular/router';
 import {Group} from '../models/Group';
 import {Location} from '@angular/common';
-import 'rxjs/add/operator/switchMap';
 import {Task} from '../models/Task';
+
+import 'rxjs/add/operator/switchMap';
 
 @Component({
   selector: 'group-editor',
@@ -26,7 +27,7 @@ export class GroupEditorComponent implements OnInit {
       .subscribe(group => {
         this.group = group;
         this.groupService.getTasksByGroupId(this.group.id)
-          .then(tasks => this.tasks = tasks );
+          .then(tasks => this.tasks = tasks);
       });
   }
 

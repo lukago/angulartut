@@ -1,7 +1,7 @@
-import { NgModule }      from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import {NgModule}      from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
 
-import { AppComponent }  from './app.component';
+import {AppComponent}  from './app.component';
 import {AppRoutingModule} from './app-routing.module';
 import {HomeComponent} from '../home/home.component';
 import {InMemoryWebApiModule} from 'angular-in-memory-web-api';
@@ -16,7 +16,7 @@ import {TaskEditorComponent} from '../editors/task-editor.component';
 import {SearchComponent} from '../navbar/search.component';
 
 @NgModule({
-  imports:      [
+  imports: [
     BrowserModule,
     AppRoutingModule,
     HttpModule,
@@ -32,7 +32,8 @@ import {SearchComponent} from '../navbar/search.component';
     TaskEditorComponent,
     SearchComponent,
   ],
-  providers:    [ GroupService ],
-  bootstrap:    [ AppComponent ]
+  providers: [GroupService],
+  bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}

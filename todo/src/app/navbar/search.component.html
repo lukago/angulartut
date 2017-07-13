@@ -1,19 +1,18 @@
-<form class="navbar-form navbar-right" role="search">
+<form class="navbar-form navbar-right row" role="search">
   <div class="form-group input-group dropdown">
     <span class="input-group-addon">Search</span>
     <input #searchBox type="text" class="form-control"
            placeholder="task title..."
-           TODO
-           [data-toggle]="searchBox"
            data-toggle="dropdown"
-           aria-haspopup="true"
-           aria-haspopup="true"
            (keyup)="search(searchBox.value)">
-    <ul class="dropdown-menu">
-      <li *ngFor="let task of tasks | async"
-          (click)="gotoDetail(task, searchBox)" class="search-result">
+    <div *ngIf="searchBox.value.length > 0"
+        class="dropdown-menu col-xs-12 list-group">
+      <li class="text-center">...</li>
+      <a *ngFor="let task of tasks | async" ng-href=""
+          (click)="gotoDetail(task, searchBox)"
+         class="search-result list-group-item list-group-item-action">
         {{task.title}}
-      </li>
-    </ul>
+      </a>
+    </div>
   </div>
 </form>

@@ -1,12 +1,18 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
+import {
+  Component, EventEmitter, Input,
+  OnChanges, OnInit, Output
+} from '@angular/core';
 import {Router} from '@angular/router';
 import {GroupService} from '../services/group.service';
 import {Task} from '../models/Task';
 import {Group} from '../models/Group';
+import {SortService} from '../services/sort.service';
+import {DatePipe} from '@angular/common';
 
 @Component({
   selector: 'tasks',
-  templateUrl: './tasks.component.html'
+  templateUrl: './tasks.component.html',
+  providers: [SortService, DatePipe]
 })
 export class TasksComponent implements OnInit, OnChanges {
   @Input() tasks: Task[] = [];
@@ -16,57 +22,80 @@ export class TasksComponent implements OnInit, OnChanges {
   @Input() updateView: boolean;
 
   showAddMenu: boolean = false;
+  today: string;
+
   groups: Group[] = [];
 
   constructor(private groupService: GroupService,
-              private router: Router) {
+              private router: Router,
+              private sortService: SortService,
+              private datePipe: DatePipe) {
   }
 
   ngOnInit(): void {
     if (this.useDb) {
       this.tasks = [];
       this.groupService.getTasksDistinct()
-        .then(tasks => this.tasks = tasks);
+        .then(tasks => this.tasks = tasks)
+        .then(() => this.sortTasksByDate());
     }
 
     this.groupService.getGroups()
       .then(groups => this.groups = groups);
+
+    this.today = this.datePipe.transform(new Date(), 'yyyy-MM-ddTHH:mm');
+    console.log(this.today);
   }
 
   ngOnChanges(): void {
     this.ngOnInit();
   }
 
-  gotoAddTask() {
-    this.showAddMenu = true;
-  }
-
   addTask(title: string, startDate: string,
           note: string, priority: number,
-          gid: number) {
-      this.showAddMenu = false;
-      let task: Task;
-      let id = Math.max(...this.tasks.map(t => t.id)) + 1;
+          gid: number, status: boolean) {
 
-      try {
-        task = new Task(id, title, new Date(startDate), note, priority, gid);
-      } catch (e) {
-        console.log('Wrong input data');
-        return;
-      }
+    if (title.length < 1 || !priority || !startDate) {
+      return;
+    }
 
-      this.groupService.createTask(task)
-        .then(t => this.tasks.push(t));
+    this.showAddMenu = false;
+    this.groupService.createTask(
+      this.tasks, title, new Date(startDate), note, priority, gid, status)
+      .then(t => this.tasks.push(t));
   }
 
   deleteTask(task: Task): void {
     this.groupService
       .deleteTask(task.id)
       .then(() => this.tasks = this.tasks.filter(t => t !== task));
-      // .then(() => this.updated.emit(true));
   }
 
   gotoTaskEditor(id: number) {
     this.router.navigate(['/tasks', id]);
+  }
+
+  sortTasksById() {
+    this.sortService.sortTasksById(this.tasks);
+  }
+
+  sortTasksByTitle() {
+    this.sortService.sortTasksByTitle(this.tasks);
+  }
+
+  sortTasksByDate() {
+    this.sortService.sortTasksByDate(this.tasks);
+  }
+
+  sortTasksByNote() {
+    this.sortService.sortTasksByNote(this.tasks);
+  }
+
+  sortTasksByPrio() {
+    this.sortService.sortTasksByPrio(this.tasks);
+  }
+
+  sortTasksByStatus() {
+    this.sortService.sortTasksByStatus(this.tasks);
   }
 }
