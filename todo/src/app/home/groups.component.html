@@ -49,8 +49,12 @@
               (click)="addGroup(groupName.value)">Add
       </button>
       <button class="btn btn-danger btn-block"
-              (click)="showAddMenu=false">Cancel
+              (click)="showAddMenu=false; showWrongInputMsg=false">Cancel
       </button>
+      <br>
+      <div *ngIf="showWrongInputMsg" class="alert alert-danger">
+        <strong>Wrong input! </strong>Check input data and try again.
+      </div>
     </div>
   </div>
 </div>

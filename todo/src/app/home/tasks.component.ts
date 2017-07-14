@@ -16,15 +16,16 @@ import {DatePipe} from '@angular/common';
 })
 export class TasksComponent implements OnInit, OnChanges {
   @Input() tasks: Task[] = [];
+  @Input() groups: Group[] = [];
   @Input() useDb = true;
 
   @Output() updated = new EventEmitter<boolean>();
   @Input() updateView: boolean;
 
-  showAddMenu: boolean = false;
+  showAddMenu = false;
+  showWrongInputMsg = false;
+  loaded = false;
   today: string;
-
-  groups: Group[] = [];
 
   constructor(private groupService: GroupService,
               private router: Router,
@@ -37,17 +38,19 @@ export class TasksComponent implements OnInit, OnChanges {
       this.tasks = [];
       this.groupService.getTasksDistinct()
         .then(tasks => this.tasks = tasks)
-        .then(() => this.sortTasksByDate());
+        .then(() => this.sortTasksByDate())
+        .then(() => this.loaded = true);
+
+      this.groups = [];
+      this.groupService.getGroups()
+        .then(groups => this.groups = groups);
     }
 
-    this.groupService.getGroups()
-      .then(groups => this.groups = groups);
-
     this.today = this.datePipe.transform(new Date(), 'yyyy-MM-ddTHH:mm');
-    console.log(this.today);
   }
 
   ngOnChanges(): void {
+    this.loaded = false;
     this.ngOnInit();
   }
 
@@ -55,10 +58,12 @@ export class TasksComponent implements OnInit, OnChanges {
           note: string, priority: number,
           gid: number, status: boolean) {
 
-    if (title.length < 1 || !priority || !startDate) {
+    if (title.length < 1 || !priority || !startDate || !gid) {
+      this.showWrongInputMsg = true;
       return;
     }
 
+    this.showWrongInputMsg = false;
     this.showAddMenu = false;
     this.groupService.createTask(
       this.tasks, title, new Date(startDate), note, priority, gid, status)

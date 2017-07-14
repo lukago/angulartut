@@ -16,6 +16,7 @@ export class TaskEditorComponent implements OnInit {
   group: Group;
   dateStr: string;
   groups: Group[] = [];
+  showWrongInputMsg = false;
 
   constructor(private groupService: GroupService,
               private route: ActivatedRoute,
@@ -47,6 +48,13 @@ export class TaskEditorComponent implements OnInit {
   }
 
   saveTaskChanges(): void {
+    if (this.task.title.length < 1 || !this.task.priority
+      || !this.dateStr) {
+      this.showWrongInputMsg = true;
+      return;
+    }
+
+
     this.task.startDate = new Date(this.dateStr);
     this.groupService.updateTask(this.task)
       .then(() => this.goBack());

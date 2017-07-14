@@ -26,7 +26,7 @@
         <th></th>
       </tr>
       </thead>
-      <tbody>
+      <tbody *ngIf="loaded">
       <tr *ngFor="let task of tasks">
         <td class="text-center">{{task.id}}</td>
         <td class="text-center">{{task.title}}</td>
@@ -56,10 +56,18 @@
       </tbody>
     </table>
   </div>
+  <div *ngIf="!loaded" class="row">
+    <br><br><br><br>
+    <div class="loader-relative col-xs-12"></div>
+    <br><br><br><br>
+  </div>
+
   <button *ngIf="!showAddMenu" type="submit"
           class="btn btn-success btn-lg btn-block"
           (click)="showAddMenu=true">+
   </button>
+
+
   <div *ngIf="showAddMenu" class="well">
     <h4>Add new task</h4>
     <div class="well">
@@ -67,28 +75,39 @@
         <label class="col-md-3 col-form-label">Title:</label>
         <div class="col-md-9"><input class="form-control" type="text" #title/>
         </div>
+      </div>
 
+      <div class="form-group row">
         <label class="col-md-3 col-form-label">Date:</label>
         <div class="col-md-9"><input class="form-control" type="datetime-local"
                                      #date [value]="today"></div>
+      </div>
 
+      <div class="form-group row">
         <label class="col-md-3 col-form-label">Note:</label>
-        <div class="col-md-9"><input class="form-control" type="text" #note/>
+        <div class="col-md-9"><textarea class="form-control" type="text"
+                                        #note rows="3"></textarea>
         </div>
+      </div>
 
+      <div class="form-group row">
         <label class="col-md-3 col-form-label">Priority:</label>
         <div class="col-md-9"><input class="form-control" type="number"
-                                     #prio [value]=0 />
+                                     #prio [value]=0>
         </div>
+      </div>
 
+      <div class="form-group row">
         <label class="col-md-3 col-form-label">Status:</label>
         <div class="col-md-9">
           <select class="form-control" #status>
+            <option [value]="false">To do</option>
             <option [value]="true">Done</option>
-            <option [value]="false">Not done</option>
           </select>
         </div>
+      </div>
 
+      <div class="form-group row">
         <label class="col-md-3 col-form-label">Group name:</label>
         <div class="col-md-9">
           <select class="form-control" #gid>
@@ -97,17 +116,21 @@
             </option>
           </select>
         </div>
-
       </div>
-      <button class="btn btn-success btn-block"
-              (click)="addTask(title.value, date.value,
+
+    </div>
+    <button class="btn btn-success btn-block"
+            (click)="addTask(title.value, date.value,
                   note.value, prio.value, gid.value, status.value)">
-        Add
-      </button>
-      <button class="btn btn-danger btn-block"
-              (click)="showAddMenu=false">
-        Cancel
-      </button>
+      Add
+    </button>
+    <button class="btn btn-danger btn-block"
+            (click)="showAddMenu=false; showWrongInputMsg=false">
+      Cancel
+    </button>
+    <br>
+    <div *ngIf="showWrongInputMsg" class="alert alert-danger">
+      <strong>Wrong input! </strong>Check input data and try again.
     </div>
   </div>
 </div>

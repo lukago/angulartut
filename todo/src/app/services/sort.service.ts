@@ -5,92 +5,85 @@ import {Injectable} from '@angular/core';
 @Injectable()
 export class SortService {
 
-  private gIdSorted = false;
-  private gNameSorted = false;
-  private tIdSorted = false;
-  private tTitleSorted = false;
-  private tDateSorted = false;
-  private tPrioSorted = false;
-  private tNoteSorted = false;
-  private tStatusSorted = false;
+  private sorted = false;
 
   sortGroupsById(groups: Group[]) {
-    if (!this.gIdSorted) {
+    if (!this.sorted) {
       groups.sort((a, b) => a.id - b.id);
-      this.gIdSorted = true;
+      this.sorted = true;
     } else {
       groups.sort((a, b) => b.id - a.id);
-      this.gIdSorted = false;
+      this.sorted = false;
     }
   }
 
   sortGroupsByName(groups: Group[]) {
-    if (!this.gNameSorted) {
+    if (!this.sorted) {
       groups.sort((a, b) => a.title > b.title ? 1 : -1);
-      this.gNameSorted = true;
+      this.sorted = true;
     } else {
       groups.sort((a, b) => a.title < b.title ? 1 : -1);
-      this.gNameSorted = false;
+      this.sorted = false;
     }
   }
 
   sortTasksById(tasks: Task[]) {
-    if (!this.tIdSorted) {
+    if (!this.sorted) {
       tasks.sort((a, b) => a.id - b.id);
-      this.tIdSorted = true;
+      this.sorted = true;
     } else {
       tasks.sort((a, b) => b.id - a.id);
-      this.tIdSorted = false;
+      this.sorted = false;
     }
   }
 
   sortTasksByTitle(tasks: Task[]) {
-    if (!this.tTitleSorted) {
+    if (!this.sorted) {
       tasks.sort((a, b) => a.title > b.title ? 1 : -1);
-      this.tTitleSorted = true;
+      this.sorted = true;
     } else {
       tasks.sort((a, b) => a.title < b.title ? 1 : -1);
-      this.tTitleSorted = false;
+      this.sorted = false;
     }
   }
 
   sortTasksByDate(tasks: Task[]) {
-    if (!this.tDateSorted) {
+    if (!this.sorted) {
       tasks.sort((a, b) => a.startDate.getTime() - b.startDate.getTime());
-      this.tDateSorted = true;
+      this.sorted = true;
     } else {
       tasks.sort((a, b) => b.startDate.getTime() - a.startDate.getTime());
-      this.tDateSorted = false;
+      this.sorted = false;
     }
   }
 
   sortTasksByPrio(tasks: Task[]) {
-    if (!this.tPrioSorted) {
+    if (!this.sorted) {
       tasks.sort((a, b) => a.priority - b.priority);
-      this.tPrioSorted = true;
+      this.sorted = true;
     } else {
       tasks.sort((a, b) => b.priority - a.priority);
-      this.tPrioSorted = false;
+      this.sorted = false;
     }
   }
 
   sortTasksByNote(tasks: Task[]) {
-    if (!this.tNoteSorted) {
+    if (!this.sorted) {
       tasks.sort((a, b) => a.note > b.note ? 1 : -1);
-      this.tNoteSorted = true;
+      this.sorted = true;
     } else {
       tasks.sort((a, b) => a.note < b.note ? 1 : -1);
-      this.tNoteSorted = false;
+      this.sorted = false;
     }
   }
 
   sortTasksByStatus(tasks: Task[]) {
-    if (!this.tStatusSorted) {
+    if (!this.sorted) {
       tasks.sort((a, b) => a.status > b.status ? 1 : -1);
-      this.tStatusSorted = true;
+      this.sorted = true;
     } else {
       tasks.sort((a, b) => a.status < b.status ? 1 : -1);
-      this.tStatusSorted = false;
+      this.sorted = false;
     }
   }
 }

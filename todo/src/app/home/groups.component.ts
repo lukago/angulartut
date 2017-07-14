@@ -20,7 +20,8 @@ export class GroupsComponent implements OnInit, OnChanges {
   @Output() updated = new EventEmitter<boolean>();
   @Input() updateView: boolean;
 
-  showAddMenu: boolean = false;
+  showAddMenu = false;
+  showWrongInputMsg = false;
 
   constructor(private groupService: GroupService,
               private router: Router,
@@ -43,14 +44,17 @@ export class GroupsComponent implements OnInit, OnChanges {
 
   addGroup(name: string): void {
     if (!name) {
+      this.showWrongInputMsg = true;
       return;
     }
 
+    this.showWrongInputMsg = false;
     this.showAddMenu = false;
     name = name.trim();
 
     this.groupService.createGroup(name)
-      .then(group => this.groups.push(group));
+      .then(group => this.groups.push(group))
+      .then(() => this.updated.emit(true));
   }
 
   deleteGroup(group: Group): void {

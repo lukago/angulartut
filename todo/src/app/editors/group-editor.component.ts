@@ -14,6 +14,7 @@ import 'rxjs/add/operator/switchMap';
 export class GroupEditorComponent implements OnInit {
   group: Group;
   tasks: Task[] = [];
+  showWrongInputMsg = false;
 
   constructor(private groupService: GroupService,
               private route: ActivatedRoute,
@@ -35,7 +36,12 @@ export class GroupEditorComponent implements OnInit {
     this.location.back();
   }
 
-  saveToDb(): void {
+  saveGroupChanges(): void {
+    if (this.group.title.length < 1) {
+      this.showWrongInputMsg = true;
+      return;
+    }
+
     this.groupService.updateGroup(this.group)
       .then(() => this.goBack());
   }
