@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {SearchService} from '../services/search.service';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
-import {Task} from '../models/Task';
+import {Task} from '../models/task';
 import {Router} from '@angular/router';
 
 // Observable class extensions

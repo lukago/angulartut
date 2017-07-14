@@ -21,7 +21,7 @@ import {SearchComponent} from '../navbar/search.component';
     AppRoutingModule,
     HttpModule,
     FormsModule,
-    InMemoryWebApiModule.forRoot(InMemoryDataService),
+    InMemoryWebApiModule.forRoot(InMemoryDataService, { delay: 500 }),
   ],
   declarations: [
     AppComponent,

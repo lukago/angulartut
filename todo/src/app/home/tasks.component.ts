@@ -4,33 +4,39 @@ import {
 } from '@angular/core';
 import {Router} from '@angular/router';
 import {GroupService} from '../services/group.service';
-import {Task} from '../models/Task';
-import {Group} from '../models/Group';
+import {Task} from '../models/task';
+import {Group} from '../models/group';
 import {SortService} from '../services/sort.service';
 import {DatePipe} from '@angular/common';
+import {PagerService} from '../services/pager.service';
+import {Pager} from '../models/pager';
 
 @Component({
   selector: 'tasks',
   templateUrl: './tasks.component.html',
-  providers: [SortService, DatePipe]
+  providers: [SortService, DatePipe, PagerService]
 })
 export class TasksComponent implements OnInit, OnChanges {
   @Input() tasks: Task[] = [];
   @Input() groups: Group[] = [];
   @Input() useDb = true;
+  @Input() loaded = false;
 
   @Output() updated = new EventEmitter<boolean>();
   @Input() updateView: boolean;
 
+  pagedTasks: Task[] = [];
+  pager: Pager;
+
   showAddMenu = false;
   showWrongInputMsg = false;
-  loaded = false;
   today: string;
 
   constructor(private groupService: GroupService,
               private router: Router,
               private sortService: SortService,
-              private datePipe: DatePipe) {
+              private datePipe: DatePipe,
+              private pagerService: PagerService) {
   }
 
   ngOnInit(): void {
@@ -39,6 +45,7 @@ export class TasksComponent implements OnInit, OnChanges {
       this.groupService.getTasksDistinct()
         .then(tasks => this.tasks = tasks)
         .then(() => this.sortTasksByDate())
+        .then(() => this.setPage(1))
         .then(() => this.loaded = true);
 
       this.groups = [];
@@ -50,8 +57,10 @@ export class TasksComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(): void {
-    this.loaded = false;
-    this.ngOnInit();
+    if (this.useDb) {
+      this.loaded = false;
+      this.ngOnInit();
+    }
   }
 
   addTask(title: string, startDate: string,
@@ -67,13 +76,27 @@ export class TasksComponent implements OnInit, OnChanges {
     this.showAddMenu = false;
     this.groupService.createTask(
       this.tasks, title, new Date(startDate), note, priority, gid, status)
-      .then(t => this.tasks.push(t));
+      .then(t => {
+        this.tasks.push(t);
+        this.setPage(this.pager.currentPage);
+      });
   }
 
   deleteTask(task: Task): void {
-    this.groupService
-      .deleteTask(task.id)
-      .then(() => this.tasks = this.tasks.filter(t => t !== task));
+    this.groupService.deleteTask(task.id);
+
+    this.tasks.splice(this.tasks.indexOf(task), 1)
+    this.pagedTasks = this.pagedTasks.filter(t => t !== task);
+
+    if (this.pagedTasks.length < 1) {
+      this.pager.pages.pop();
+      this.setPage(this.pager.currentPage - 1);
+    }
+  }
+
+  setPage(page: number) {
+    this.pager = this.pagerService.createPager(this.tasks.length, page, 6);
+    this.pagedTasks = this.tasks.slice(this.pager.startIndex, this.pager.endIndex + 1);
   }
 
   gotoTaskEditor(id: number) {
@@ -81,26 +104,26 @@ export class TasksComponent implements OnInit, OnChanges {
   }
 
   sortTasksById() {
-    this.sortService.sortTasksById(this.tasks);
+    this.sortService.sortTasksById(this.pagedTasks);
   }
 
   sortTasksByTitle() {
-    this.sortService.sortTasksByTitle(this.tasks);
+    this.sortService.sortTasksByTitle(this.pagedTasks);
   }
 
   sortTasksByDate() {
-    this.sortService.sortTasksByDate(this.tasks);
+    this.sortService.sortTasksByDate(this.pagedTasks);
   }
 
   sortTasksByNote() {
-    this.sortService.sortTasksByNote(this.tasks);
+    this.sortService.sortTasksByNote(this.pagedTasks);
   }
 
   sortTasksByPrio() {
-    this.sortService.sortTasksByPrio(this.tasks);
+    this.sortService.sortTasksByPrio(this.pagedTasks);
   }
 
   sortTasksByStatus() {
-    this.sortService.sortTasksByStatus(this.tasks);
+    this.sortService.sortTasksByStatus(this.pagedTasks);
   }
 }

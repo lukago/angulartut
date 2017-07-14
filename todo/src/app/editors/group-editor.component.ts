@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {GroupService} from '../services/group.service';
 import {ActivatedRoute, ParamMap} from '@angular/router';
-import {Group} from '../models/Group';
+import {Group} from '../models/group';
 import {Location} from '@angular/common';
-import {Task} from '../models/Task';
+import {Task} from '../models/task';
 
 import 'rxjs/add/operator/switchMap';
 
@@ -15,6 +15,7 @@ export class GroupEditorComponent implements OnInit {
   group: Group;
   tasks: Task[] = [];
   showWrongInputMsg = false;
+  loadedTasks = false;
 
   constructor(private groupService: GroupService,
               private route: ActivatedRoute,
@@ -28,7 +29,8 @@ export class GroupEditorComponent implements OnInit {
       .subscribe(group => {
         this.group = group;
         this.groupService.getTasksByGroupId(this.group.id)
-          .then(tasks => this.tasks = tasks);
+          .then(tasks => this.tasks = tasks)
+          .then(() => this.loadedTasks = true);
       });
   }
 

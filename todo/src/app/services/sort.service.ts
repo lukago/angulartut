@@ -1,5 +1,5 @@
-import {Group} from '../models/Group';
-import {Task} from '../models/Task';
+import {Group} from '../models/group';
+import {Task} from '../models/task';
 import {Injectable} from '@angular/core';
 
 @Injectable()

@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
-import {Group} from '../models/Group';
-import {Task} from '../models/Task';
+import {Group} from '../models/group';
+import {Task} from '../models/task';
 import {Headers, Http} from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
@@ -50,7 +50,7 @@ export class GroupService {
              priority: number, gid: number,
              status: boolean): Promise<Task> {
 
-    let id = Math.max(...tasks.map(t => t.id)) + 1;
+    let id = tasks.length ? Math.max(...tasks.map(t => t.id)) + 1 : 0;
     let task = new Task(id, title, date, note, priority, gid, status);
 
     return this.http

@@ -2,10 +2,10 @@ import {
   Component, EventEmitter, Input,
   OnChanges, OnInit, Output
 } from '@angular/core';
-import {Group} from '../models/Group';
+import {Group} from '../models/group';
 import {GroupService} from '../services/group.service';
 import {Router} from '@angular/router';
-import {Task} from '../models/Task';
+import {Task} from '../models/task';
 import {SortService} from '../services/sort.service';
 
 
@@ -22,6 +22,7 @@ export class GroupsComponent implements OnInit, OnChanges {
 
   showAddMenu = false;
   showWrongInputMsg = false;
+  loaded = false;
 
   constructor(private groupService: GroupService,
               private router: Router,
@@ -31,10 +32,12 @@ export class GroupsComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.groups = [];
     this.groupService.getGroups()
-      .then(groups => this.groups = groups);
+      .then(groups => this.groups = groups)
+      .then(() => this.loaded = true);
   }
 
   ngOnChanges(): void {
+    this.loaded = false;
     this.ngOnInit();
   }
 

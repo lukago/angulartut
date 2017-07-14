@@ -14,7 +14,7 @@
         <th></th>
       </tr>
       </thead>
-      <tbody>
+      <tbody *ngIf="loaded">
       <tr *ngFor="let group of groups">
         <td class="text-center">{{group.id}}</td>
         <td class="text-center">{{group.title}}</td>
@@ -32,10 +32,18 @@
       </tbody>
     </table>
   </div>
+  <div *ngIf="!loaded" class="row">
+    <br><br>
+    <div class="loader-relative col-xs-12"></div>
+    <br><br><br>
+  </div>
+
   <button *ngIf="!showAddMenu" type="submit"
           class="btn btn-success btn-lg btn-block"
           (click)="showAddMenu=true">+
   </button>
+
+
   <div *ngIf="showAddMenu" class="well">
     <h4>Add new group</h4>
     <div class="well">

@@ -27,7 +27,7 @@
       </tr>
       </thead>
       <tbody *ngIf="loaded">
-      <tr *ngFor="let task of tasks">
+      <tr *ngFor="let task of pagedTasks">
         <td class="text-center">{{task.id}}</td>
         <td class="text-center">{{task.title}}</td>
         <td *ngIf="useDb" class="text-center">
@@ -56,10 +56,28 @@
       </tbody>
     </table>
   </div>
+
+  <!-- pager -->
+  <div class="text-center">
+    <ul *ngIf="pager && pager.pages && pager.pages.length"
+        class="pagination pagination-sm">
+      <li [ngClass]="{disabled:pager.currentPage === 1}">
+        <a href="javascript:void(0)" (click)="setPage(1)">First</a>
+      </li>
+      <li *ngFor="let page of pager.pages"
+          [ngClass]="{active:pager.currentPage === page}">
+        <a href="javascript:void(0)" (click)="setPage(page)">{{page}}</a>
+      </li>
+      <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+        <a href="javascript:void(0)" (click)="setPage(pager.totalPages)">Last</a>
+      </li>
+    </ul>
+  </div>
+
   <div *ngIf="!loaded" class="row">
-    <br><br><br><br>
+    <br><br>
     <div class="loader-relative col-xs-12"></div>
-    <br><br><br><br>
+    <br><br><br>
   </div>
 
   <button *ngIf="!showAddMenu" type="submit"
