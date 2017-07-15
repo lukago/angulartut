@@ -1,5 +1,7 @@
 import {Pager} from '../models/pager';
+import {Injectable} from '@angular/core';
 
+@Injectable()
 export class PagerService {
 
   createPager(totalItems: number, currentPage: number, pageSize: number): Pager {
@@ -26,7 +28,7 @@ export class PagerService {
     }
 
     // calculate start and end item indexes
-    let startIndex = (currentPage - 1) * pageSize;
+    let startIndex = (endPage - currentPage) * pageSize;
     let endIndex = Math.min(startIndex + pageSize - 1, totalItems - 1);
 
     // create an array of pages to ng-repeat in the pager control

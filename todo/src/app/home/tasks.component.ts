@@ -53,6 +53,7 @@ export class TasksComponent implements OnInit, OnChanges {
         .then(groups => this.groups = groups);
     }
 
+
     this.today = this.datePipe.transform(new Date(), 'yyyy-MM-ddTHH:mm');
   }
 
@@ -60,6 +61,12 @@ export class TasksComponent implements OnInit, OnChanges {
     if (this.useDb) {
       this.loaded = false;
       this.ngOnInit();
+    }
+
+    if (!this.useDb && !this.pager) {
+      this.setPage(1);
+    } else if (!this.useDb) {
+      this.setPage(this.pager.currentPage);
     }
   }
 
@@ -74,6 +81,7 @@ export class TasksComponent implements OnInit, OnChanges {
 
     this.showWrongInputMsg = false;
     this.showAddMenu = false;
+
     this.groupService.createTask(
       this.tasks, title, new Date(startDate), note, priority, gid, status)
       .then(t => {
@@ -85,12 +93,12 @@ export class TasksComponent implements OnInit, OnChanges {
   deleteTask(task: Task): void {
     this.groupService.deleteTask(task.id);
 
-    this.tasks.splice(this.tasks.indexOf(task), 1)
+    this.tasks.splice(this.tasks.indexOf(task), 1);
     this.pagedTasks = this.pagedTasks.filter(t => t !== task);
 
     if (this.pagedTasks.length < 1) {
       this.pager.pages.pop();
-      this.setPage(this.pager.currentPage - 1);
+      this.setPage(this.pager.currentPage);
     }
   }
 
