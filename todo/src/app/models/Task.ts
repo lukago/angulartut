@@ -18,10 +18,4 @@ export class Task {
     this.groupId = groupId;
     this.status = status;
   }
-
-  equals(task: Task): boolean {
-    return this.startDate.getTime() === task.startDate.getTime()
-      && this.title === task.title
-      && this.note === task.note;
-  }
 }

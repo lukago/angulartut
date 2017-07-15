@@ -54,7 +54,6 @@ export class TaskEditorComponent implements OnInit {
       return;
     }
 
-
     this.task.startDate = new Date(this.dateStr);
     this.groupService.updateTask(this.task)
       .then(() => this.goBack());

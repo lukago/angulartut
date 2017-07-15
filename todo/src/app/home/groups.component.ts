@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {Group} from '../models/group';
 import {GroupService} from '../services/group.service';
 import {Router} from '@angular/router';
@@ -13,13 +13,13 @@ import {Pager} from '../models/pager';
   templateUrl: './groups.component.html',
   providers: [SortService, PagerService]
 })
-export class GroupsComponent implements OnInit, OnChanges {
+export class GroupsComponent implements OnInit {
   groups: Group[] = [];
   pagedGroups: Group[] = [];
   pager: Pager;
 
-  @Output() updated = new EventEmitter<boolean>();
-  @Input() updateView: boolean;
+  @Output() deleted = new EventEmitter();
+  @Output() added = new EventEmitter();
 
   showAddMenu = false;
   showWrongInputMsg = false;
@@ -37,11 +37,6 @@ export class GroupsComponent implements OnInit, OnChanges {
       .then(groups => this.groups = groups)
       .then(() => this.setPage(1))
       .then(() => this.loaded = true);
-  }
-
-  ngOnChanges(): void {
-    this.loaded = false;
-    this.ngOnInit();
   }
 
   gotoGroupEditor(id: number): void {
@@ -63,7 +58,7 @@ export class GroupsComponent implements OnInit, OnChanges {
         this.groups.push(group);
         this.setPage(this.pager.currentPage);
       })
-      .then(() => this.updated.emit(true));
+      .then(() => this.added.emit());
   }
 
   deleteGroup(group: Group): void {
@@ -73,11 +68,10 @@ export class GroupsComponent implements OnInit, OnChanges {
       .then(() => tasks.forEach(t => this.groupService.deleteTask(t.id)));
 
     this.groupService.deleteGroup(group.id)
-      .then(() => this.updated.emit(true));
+      .then(() => this.deleted.emit());
 
     this.groups.splice(this.groups.indexOf(group), 1);
     this.pagedGroups = this.pagedGroups.filter(gr => gr !== group);
-
 
     if (this.pagedGroups.length < 1) {
       this.pager.pages.pop();

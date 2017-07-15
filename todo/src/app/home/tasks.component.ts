@@ -1,7 +1,4 @@
-import {
-  Component, EventEmitter, Input,
-  OnChanges, OnInit, Output
-} from '@angular/core';
+import {Component, Input, OnChanges, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {GroupService} from '../services/group.service';
 import {Task} from '../models/task';
@@ -22,9 +19,6 @@ export class TasksComponent implements OnInit, OnChanges {
   @Input() useDb = true;
   @Input() loaded = false;
 
-  @Output() updated = new EventEmitter<boolean>();
-  @Input() updateView: boolean;
-
   pagedTasks: Task[] = [];
   pager: Pager;
 
@@ -41,32 +35,38 @@ export class TasksComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     if (this.useDb) {
-      this.tasks = [];
-      this.groupService.getTasksDistinct()
-        .then(tasks => this.tasks = tasks)
-        .then(() => this.sortTasksByDate())
-        .then(() => this.setPage(1))
-        .then(() => this.loaded = true);
-
-      this.groups = [];
-      this.groupService.getGroups()
-        .then(groups => this.groups = groups);
+      this.loadTasks();
+      this.loadGroups();
     }
-
 
     this.today = this.datePipe.transform(new Date(), 'yyyy-MM-ddTHH:mm');
   }
 
-  ngOnChanges(): void {
-    if (this.useDb) {
-      this.loaded = false;
-      this.ngOnInit();
-    }
+  loadTasks(): void {
+    this.tasks = [];
+    this.groupService.getTasksDistinct()
+      .then(tasks => this.tasks = tasks)
+      .then(() => this.tasks.sort(
+        (a, b) => a.startDate.getTime() - b.startDate.getTime()))
+      .then(() => this.setPage(1))
+      .then(() => this.loaded = true);
+  }
 
-    if (!this.useDb && !this.pager) {
-      this.setPage(1);
-    } else if (!this.useDb) {
-      this.setPage(this.pager.currentPage);
+  loadGroups(): void {
+    this.groups = [];
+    this.groupService.getGroups()
+      .then(groups => this.groups = groups);
+  }
+
+  ngOnChanges(): void {
+    if (!this.useDb) {
+      if (this.pager) {
+        this.tasks.sort(
+          (a, b) => a.startDate.getTime() - b.startDate.getTime())
+        this.setPage(this.pager.currentPage);
+      } else {
+        this.setPage(1);
+      }
     }
   }
 
@@ -104,7 +104,10 @@ export class TasksComponent implements OnInit, OnChanges {
 
   setPage(page: number) {
     this.pager = this.pagerService.createPager(this.tasks.length, page, 6);
-    this.pagedTasks = this.tasks.slice(this.pager.startIndex, this.pager.endIndex + 1);
+    this.pagedTasks =
+      this.tasks.slice(this.pager.startIndex, this.pager.endIndex + 1);
+    this.pagedTasks.sort(
+      (a, b) => b.startDate.getTime() - a.startDate.getTime());
   }
 
   gotoTaskEditor(id: number) {
