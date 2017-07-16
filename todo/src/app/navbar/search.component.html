@@ -1,18 +1,6 @@
-<form class="navbar-form navbar-right row" role="search">
-  <div class="form-group input-group dropdown">
-    <span class="input-group-addon">Search</span>
-    <input #searchBox type="text" class="form-control"
-           placeholder="task title..."
-           data-toggle="dropdown"
-           (keyup)="search(searchBox.value)">
-    <div *ngIf="searchBox.value.length > 0"
-        class="dropdown-menu col-xs-12 list-group">
-      <li class="text-center">...</li>
-      <a *ngFor="let task of tasks | async" ng-href=""
-          (click)="gotoDetail(task, searchBox)"
-         class="search-result list-group-item list-group-item-action">
-        {{task.title}}
-      </a>
-    </div>
-  </div>
-</form>
+<div class="form-group input-group">
+  <span class="input-group-addon">Search</span>
+  <input #searchBox type="text" class="form-control"
+         placeholder="Enter task title..."
+         (keyup)="search(searchBox.value)">
+</div>

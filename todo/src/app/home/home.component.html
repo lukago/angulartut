@@ -1,12 +1,12 @@
 <div class="container">
   <div class="row content">
 
-    <div class="col-md-6">
+    <div class="col-md-8">
       <tasks #tasksComponent></tasks>
     </div>
 
-    <div class="col-md-6">
-      <groups (deleted)="$event ? tasksComponent.loadTasks() : console"
+    <div class="col-md-4">
+      <groups (deleted)="tasksComponent.loadTasks(); tasksComponent.loadGroups()"
               (added)="tasksComponent.loadGroups()">
       </groups>
     </div>

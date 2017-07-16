@@ -86,4 +86,12 @@ export class SortService {
       this.sorted = false;
     }
   }
+
+  sortTasksByGroupName(tasks: Task[], groups: Group[]): Task[] {
+    let sortedTasks: Task[] = [];
+    this.sortGroupsByName(groups);
+    groups.forEach(gr =>
+      sortedTasks.push(...tasks.filter(t => t.groupId === gr.id)));
+    return sortedTasks;
+  }
 }

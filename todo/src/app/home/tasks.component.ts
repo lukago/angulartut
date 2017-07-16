@@ -7,6 +7,7 @@ import {SortService} from '../services/sort.service';
 import {DatePipe} from '@angular/common';
 import {PagerService} from '../services/pager.service';
 import {Pager} from '../models/pager';
+import {Observable} from 'rxjs/Observable';
 
 @Component({
   selector: 'tasks',
@@ -33,6 +34,13 @@ export class TasksComponent implements OnInit, OnChanges {
               private pagerService: PagerService) {
   }
 
+  showSearchedTasks(searchedTasks: Observable<Task[]>): void {
+    searchedTasks.subscribe(tasks => {
+      this.tasks = tasks;
+      this.setPage(1);
+    });
+  }
+
   ngOnInit(): void {
     if (this.useDb) {
       this.loadTasks();
@@ -42,37 +50,28 @@ export class TasksComponent implements OnInit, OnChanges {
     this.today = this.datePipe.transform(new Date(), 'yyyy-MM-ddTHH:mm');
   }
 
-  loadTasks(): void {
+  ngOnChanges(): void {
+    this.pager ? this.setPage(this.pager.currentPage) : this.setPage(1);
+  }
+
+  loadTasks() {
+    this.loaded = false;
     this.tasks = [];
     this.groupService.getTasksDistinct()
       .then(tasks => this.tasks = tasks)
-      .then(() => this.tasks.sort(
-        (a, b) => a.startDate.getTime() - b.startDate.getTime()))
-      .then(() => this.setPage(1))
-      .then(() => this.loaded = true);
+      .then(() => this.setPage(1));
   }
 
   loadGroups(): void {
     this.groups = [];
     this.groupService.getGroups()
-      .then(groups => this.groups = groups);
-  }
-
-  ngOnChanges(): void {
-    if (!this.useDb) {
-      if (this.pager) {
-        this.tasks.sort(
-          (a, b) => a.startDate.getTime() - b.startDate.getTime())
-        this.setPage(this.pager.currentPage);
-      } else {
-        this.setPage(1);
-      }
-    }
+      .then(groups => this.groups = groups)
+      .then(() => this.loaded = true);
   }
 
   addTask(title: string, startDate: string,
           note: string, priority: number,
-          gid: number, status: boolean) {
+          gid: string, status: boolean) {
 
     if (title.length < 1 || !priority || !startDate || !gid) {
       this.showWrongInputMsg = true;
@@ -82,18 +81,17 @@ export class TasksComponent implements OnInit, OnChanges {
     this.showWrongInputMsg = false;
     this.showAddMenu = false;
 
-    this.groupService.createTask(
-      this.tasks, title, new Date(startDate), note, priority, gid, status)
-      .then(t => {
-        this.tasks.push(t);
-        this.setPage(this.pager.currentPage);
-      });
+    this.groupService
+      .createTask(this.tasks, title, new Date(startDate),
+        note, priority, Number.parseInt(gid), status)
+      .then(t => this.tasks.push(t))
+      .then(() => this.setPage(this.pager.currentPage));
   }
 
   deleteTask(task: Task): void {
     this.groupService.deleteTask(task.id);
 
-    this.tasks.splice(this.tasks.indexOf(task), 1);
+    this.tasks = this.tasks.filter(t => t !== task);
     this.pagedTasks = this.pagedTasks.filter(t => t !== task);
 
     if (this.pagedTasks.length < 1) {
@@ -104,37 +102,52 @@ export class TasksComponent implements OnInit, OnChanges {
 
   setPage(page: number) {
     this.pager = this.pagerService.createPager(this.tasks.length, page, 6);
-    this.pagedTasks =
-      this.tasks.slice(this.pager.startIndex, this.pager.endIndex + 1);
-    this.pagedTasks.sort(
-      (a, b) => b.startDate.getTime() - a.startDate.getTime());
+    this.pagedTasks = this.tasks
+      .slice(this.pager.startIndex, this.pager.endIndex + 1)
+      .reverse();
   }
 
   gotoTaskEditor(id: number) {
     this.router.navigate(['/tasks', id]);
   }
 
+  getGroupName(gid: number): string {
+    return this.groups.find(gr => gr.id === gid).title;
+  }
+
   sortTasksById() {
-    this.sortService.sortTasksById(this.pagedTasks);
+    this.sortService.sortTasksById(this.tasks);
+    this.setPage(this.pager.currentPage);
   }
 
   sortTasksByTitle() {
-    this.sortService.sortTasksByTitle(this.pagedTasks);
+    this.sortService.sortTasksByTitle(this.tasks);
+    this.setPage(this.pager.currentPage);
+  }
+
+  sortTasksByGroupName() {
+    this.tasks =
+      this.sortService.sortTasksByGroupName(this.tasks, this.groups);
+    this.setPage(this.pager.currentPage);
   }
 
   sortTasksByDate() {
-    this.sortService.sortTasksByDate(this.pagedTasks);
+    this.sortService.sortTasksByDate(this.tasks);
+    this.setPage(this.pager.currentPage);
   }
 
   sortTasksByNote() {
-    this.sortService.sortTasksByNote(this.pagedTasks);
+    this.sortService.sortTasksByNote(this.tasks);
+    this.setPage(this.pager.currentPage);
   }
 
   sortTasksByPrio() {
-    this.sortService.sortTasksByPrio(this.pagedTasks);
+    this.sortService.sortTasksByPrio(this.tasks);
+    this.setPage(this.pager.currentPage);
   }
 
   sortTasksByStatus() {
-    this.sortService.sortTasksByStatus(this.pagedTasks);
+    this.sortService.sortTasksByStatus(this.tasks);
+    this.setPage(this.pager.currentPage);
   }
 }

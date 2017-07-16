@@ -12,8 +12,18 @@ export class SearchService {
   }
 
   search(term: string): Observable<Task[]> {
+    let url = term ? `api/tasks?title=${term}` : 'api/tasks';
+
     return this.http
-      .get(`api/tasks?title=${term}`)
-      .map(resposne => resposne.json().data as Task[]);
+      .get(url)
+      .map(resposne => this.toTaskArray(resposne.json().data));
+  }
+
+  private toTaskArray(array: any): Task[] {
+    let tasks: Task[] = [];
+    array.forEach((t: Task) => tasks.push(
+        new Task(t.id, t.title, t.startDate,
+          t.note, t.priority, t.groupId, t.status)))
+    return tasks;
   }
 }

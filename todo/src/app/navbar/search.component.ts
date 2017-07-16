@@ -1,9 +1,11 @@
-import {Component, OnInit} from '@angular/core';
+import {
+  Component, EventEmitter, OnInit,
+  Output
+} from '@angular/core';
 import {SearchService} from '../services/search.service';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import {Task} from '../models/task';
-import {Router} from '@angular/router';
 
 // Observable class extensions
 import 'rxjs/add/observable/of';
@@ -19,33 +21,27 @@ import 'rxjs/add/operator/distinctUntilChanged';
   providers: [SearchService]
 })
 export class SearchComponent implements OnInit {
-  tasks: Observable<Task[]>;
+  @Output() searchedTasks = new EventEmitter<Observable<Task[]>>();
+
+  private tasks = Observable.of<Task[]>([]);
   private searchTerms = new Subject<string>();
 
-  constructor(private searchService: SearchService,
-              private router: Router) {
+  constructor(private searchService: SearchService) {
   }
 
   search(term: string): void {
     this.searchTerms.next(term);
+    this.searchedTasks.emit(this.tasks);
   }
 
   ngOnInit(): void {
     this.tasks = this.searchTerms
       .debounceTime(300)
       .distinctUntilChanged()
-      .switchMap(term => term
-        ? this.searchService.search(term)
-        : Observable.of<Task[]>([]))
+      .switchMap(term => this.searchService.search(term))
       .catch(error => {
         console.log(error);
         return Observable.of<Task[]>([]);
       });
-  }
-
-  gotoDetail(task: Task, input: HTMLInputElement): void {
-    input.value = '';
-    this.search('');
-    this.router.navigate(['/tasks', task.id]);
   }
 }

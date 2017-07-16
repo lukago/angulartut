@@ -14,25 +14,17 @@ export class GroupService {
   }
 
   getGroups(): Promise<Group[]> {
-    let groups: Group[] = [];
     return this.http.get(this.groupsUrl, {headers: this.headers})
       .toPromise()
-      .then(response => response.json().data.forEach(
-        (g: Group) => groups.push(new Group(g.id, g.title))))
-      .then(() => Promise.resolve(groups))
+      .then(response => response.json().data as Group[])
       .catch(this.handleError);
   }
 
   getGroup(id: number): Promise<Group> {
     let url = `${this.groupsUrl}/${id}`;
-    let group: Group;
     return this.http.get(url, {headers: this.headers})
       .toPromise()
-      .then(res => {
-        let data = res.json().data;
-        group = new Group(data.id, data.title);
-      })
-      .then(() => Promise.resolve(group))
+      .then(res => res.json().data as Group)
       .catch(this.handleError);
   }
 
@@ -98,46 +90,42 @@ export class GroupService {
 
   getTasksByGroupId(id: number): Promise<Task[]> {
     const url = `${this.tasksUrl}?groupId=${id}`;
-    let tasks: Task[] = [];
 
     return this.http.get(url, {headers: this.headers})
       .toPromise()
-      .then(res => res.json().data.forEach(
-        (t: Task) => tasks.push(
-          new Task(t.id, t.title, t.startDate,
-            t.note, t.priority, t.groupId, t.status))))
-      .then(() => Promise.resolve(tasks))
+      .then(res => this.toTaskArray(res.json().data))
       .catch(this.handleError);
   }
 
   getTasksDistinct(): Promise<Task[]> {
-    let tasks: Task[] = [];
     return this.http.get(this.tasksUrl, {headers: this.headers})
       .toPromise()
-      .then(response => response.json().data.forEach(
-        (t: Task) => tasks.push(
-          new Task(t.id, t.title, t.startDate,
-            t.note, t.priority, t.groupId, t.status))))
-      .then(() => Promise.resolve(tasks));
+      .then(response => this.toTaskArray(response.json().data))
+      .catch(this.handleError);
   }
 
   getTask(id: number): Promise<Task> {
     let url = `${this.tasksUrl}/${id}`;
-    let task: Task;
     return this.http.get(url, {headers: this.headers})
       .toPromise()
-      .then(res => {
-        let data = res.json().data as Task;
-        task = new Task(data.id, data.title,
-          data.startDate, data.note, data.priority,
-          data.groupId, data.status);
-      })
-      .then(() => Promise.resolve(task))
+      .then(res => this.toTask(res.json().data))
       .catch(this.handleError);
   }
 
-  handleError(error: any): Promise<any> {
+  private handleError(error: any): Promise<any> {
     console.log('error while geting data from api', error);
     return Promise.reject(error.message || error);
+  }
+
+  private toTaskArray(array: any): Task[] {
+    let tasks: Task[] = [];
+    array.forEach((t: Task) => tasks.push(this.toTask(t)));
+    return tasks;
+  }
+
+  private toTask(obj: any): Task {
+    let t = obj as Task;
+    return new Task(t.id, t.title, t.startDate,
+      t.note, t.priority, t.groupId, t.status);
   }
 }

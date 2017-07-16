@@ -1,6 +1,14 @@
 <h3 class="text-center well">Tasks</h3>
 <div class="nav nav-pills nav-stacked well">
   <div class="table-responsive">
+
+    <!-- Search -->
+    <div>
+      <tmgr-search class="text-center"
+                   (searchedTasks)="showSearchedTasks($event)"></tmgr-search>
+    </div>
+
+    <!-- Table -->
     <table class="table table-hover">
       <thead>
       <tr>
@@ -16,7 +24,10 @@
         <th *ngIf="!useDb" class="text-center">
           <button (click)="sortTasksByNote()">Note</button>
         </th>
-        <th *ngIf="!useDb" class="text-center">
+        <th class="text-center">
+          <button (click)="sortTasksByGroupName()">Group</button>
+        </th>
+        <th class="text-center">
           <button (click)="sortTasksByPrio()">Priority</button>
         </th>
         <th *ngIf="!useDb" class="text-center">
@@ -38,7 +49,8 @@
           {{task.startDate.toLocaleTimeString()}}
         </td>
         <td *ngIf="!useDb" class="text-center">{{task.note}}</td>
-        <td *ngIf="!useDb" class="text-center">{{task.priority}}</td>
+        <td class="text-center">{{getGroupName(task.groupId)}}</td>
+        <td class="text-center">{{task.priority}}</td>
         <td *ngIf="!useDb" class="text-center">
           {{task.status ? 'Done' : 'To do'}}
         </td>
@@ -85,6 +97,7 @@
           (click)="showAddMenu=true">+
   </button>
 
+  <!-- Adding new task -->
   <div *ngIf="showAddMenu" class="well">
     <h4>Add new task</h4>
     <div class="well">

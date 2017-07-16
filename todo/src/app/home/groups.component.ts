@@ -57,8 +57,8 @@ export class GroupsComponent implements OnInit {
       .then(group => {
         this.groups.push(group);
         this.setPage(this.pager.currentPage);
-      })
-      .then(() => this.added.emit());
+        this.added.emit();
+      });
   }
 
   deleteGroup(group: Group): void {
@@ -70,7 +70,7 @@ export class GroupsComponent implements OnInit {
     this.groupService.deleteGroup(group.id)
       .then(() => this.deleted.emit());
 
-    this.groups.splice(this.groups.indexOf(group), 1);
+    this.groups = this.groups.filter(gr => gr !== group);
     this.pagedGroups = this.pagedGroups.filter(gr => gr !== group);
 
     if (this.pagedGroups.length < 1) {
@@ -81,14 +81,18 @@ export class GroupsComponent implements OnInit {
 
   setPage(page: number) {
     this.pager = this.pagerService.createPager(this.groups.length, page, 6);
-    this.pagedGroups = this.groups.slice(this.pager.startIndex, this.pager.endIndex + 1);
+    this.pagedGroups =
+      this.groups.slice(this.pager.startIndex, this.pager.endIndex + 1)
+      .reverse();
   }
 
   sortGroupsById() {
     this.sortService.sortGroupsById(this.groups);
+    this.setPage(this.pager.currentPage);
   }
 
   sortGroupsByName() {
     this.sortService.sortGroupsByName(this.groups);
+    this.setPage(this.pager.currentPage);
   }
 }
