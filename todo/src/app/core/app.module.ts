@@ -4,8 +4,6 @@ import {BrowserModule} from '@angular/platform-browser';
 import {AppComponent}  from './app.component';
 import {AppRoutingModule} from './app-routing.module';
 import {HomeComponent} from '../home/home.component';
-import {InMemoryWebApiModule} from 'angular-in-memory-web-api';
-import {InMemoryDataService} from '../services/in-memory-data.service';
 import {GroupService} from '../services/group.service';
 import {HttpModule} from '@angular/http';
 import {GroupsComponent} from '../home/groups.component';
@@ -21,7 +19,6 @@ import {SearchComponent} from '../navbar/search.component';
     AppRoutingModule,
     HttpModule,
     FormsModule,
-    InMemoryWebApiModule.forRoot(InMemoryDataService, { delay: 500 }),
   ],
   declarations: [
     AppComponent,

@@ -65,10 +65,10 @@ export class GroupsComponent implements OnInit {
     let tasks: Task[] = [];
     this.groupService.getTasksByGroupId(group.id)
       .then(res => tasks = res)
-      .then(() => tasks.forEach(t => this.groupService.deleteTask(t.id)));
-
-    this.groupService.deleteGroup(group.id)
+      .then(() => tasks.forEach(t => this.groupService.deleteTask(t.id)))
+      .then(() => this.groupService.deleteGroup(group.id))
       .then(() => this.deleted.emit());
+
 
     this.groups = this.groups.filter(gr => gr !== group);
     this.pagedGroups = this.pagedGroups.filter(gr => gr !== group);

@@ -2,29 +2,30 @@ import {Injectable} from '@angular/core';
 import {Group} from '../models/group';
 import {Task} from '../models/task';
 import {Headers, Http} from '@angular/http';
+
 import 'rxjs/add/operator/toPromise';
 
 @Injectable()
 export class GroupService {
-  private groupsUrl = 'api/groups';
-  private tasksUrl = 'api/tasks';
+  private groupsUrl = 'http://localhost:8080/api/groups';
+  private tasksUrl = 'http://localhost:8080/api/tasks';
   private headers = new Headers({'Content-Type': 'application/json'});
 
   constructor(private http: Http) {
   }
 
   getGroups(): Promise<Group[]> {
-    return this.http.get(this.groupsUrl, {headers: this.headers})
+    return this.http.get(this.groupsUrl)
       .toPromise()
-      .then(response => response.json().data as Group[])
+      .then(response => response.json().groups as Group[])
       .catch(this.handleError);
   }
 
   getGroup(id: number): Promise<Group> {
     let url = `${this.groupsUrl}/${id}`;
-    return this.http.get(url, {headers: this.headers})
+    return this.http.get(url)
       .toPromise()
-      .then(res => res.json().data as Group)
+      .then(res => res.json().group as Group)
       .catch(this.handleError);
   }
 
@@ -33,7 +34,7 @@ export class GroupService {
       .post(this.groupsUrl, JSON.stringify({title: title, tasks: []}),
         {headers: this.headers})
       .toPromise()
-      .then(res => res.json().data as Group)
+      .then(res => new Group(res.json().id, title))
       .catch(this.handleError);
   }
 
@@ -48,8 +49,8 @@ export class GroupService {
     return this.http
       .post(this.tasksUrl, JSON.stringify(task), {headers: this.headers})
       .toPromise()
-      .then(() => Promise.resolve(task))
-      .catch(this.handleError);
+      .then(res => new Task(res.json().id, title,
+          date, note, priority, gid, status));
   }
 
   updateTask(task: Task): Promise<Task> {
@@ -91,40 +92,40 @@ export class GroupService {
   getTasksByGroupId(id: number): Promise<Task[]> {
     const url = `${this.tasksUrl}?groupId=${id}`;
 
-    return this.http.get(url, {headers: this.headers})
+    return this.http.get(url)
       .toPromise()
-      .then(res => this.toTaskArray(res.json().data))
+      .then(res => this.toTaskArray(res.json()))
       .catch(this.handleError);
   }
 
   getTasksDistinct(): Promise<Task[]> {
-    return this.http.get(this.tasksUrl, {headers: this.headers})
+    return this.http.get(this.tasksUrl)
       .toPromise()
-      .then(response => this.toTaskArray(response.json().data))
+      .then(response => this.toTaskArray(response.json()))
       .catch(this.handleError);
   }
 
   getTask(id: number): Promise<Task> {
     let url = `${this.tasksUrl}/${id}`;
-    return this.http.get(url, {headers: this.headers})
+    return this.http.get(url)
       .toPromise()
-      .then(res => this.toTask(res.json().data))
+      .then(res => this.toTask(res.json().task))
       .catch(this.handleError);
   }
 
   private handleError(error: any): Promise<any> {
-    console.log('error while geting data from api', error);
+    console.log('error while getting data from api', error);
     return Promise.reject(error.message || error);
   }
 
   private toTaskArray(array: any): Task[] {
+    let arrayTasks = array.tasks;
     let tasks: Task[] = [];
-    array.forEach((t: Task) => tasks.push(this.toTask(t)));
+    arrayTasks.forEach((t: Task) => tasks.push(this.toTask(t)));
     return tasks;
   }
 
-  private toTask(obj: any): Task {
-    let t = obj as Task;
+  private toTask(t: Task): Task {
     return new Task(t.id, t.title, t.startDate,
       t.note, t.priority, t.groupId, t.status);
   }

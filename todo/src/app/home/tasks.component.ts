@@ -43,8 +43,7 @@ export class TasksComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     if (this.useDb) {
-      this.loadTasks();
-      this.loadGroups();
+      this.loadGroupsAndTasks();
     }
 
     this.today = this.datePipe.transform(new Date(), 'yyyy-MM-ddTHH:mm');
@@ -59,13 +58,29 @@ export class TasksComponent implements OnInit, OnChanges {
     this.tasks = [];
     this.groupService.getTasksDistinct()
       .then(tasks => this.tasks = tasks)
-      .then(() => this.setPage(1));
+      .then(() => this.setPage(1))
+      .then(() => console.log(this.tasks));
   }
 
   loadGroups(): void {
+    this.loaded = false;
     this.groups = [];
     this.groupService.getGroups()
       .then(groups => this.groups = groups)
+      .then(() => this.loaded = true);
+  }
+
+  loadGroupsAndTasks(): void {
+    this.loaded = false;
+    this.tasks = [];
+    this.groups = [];
+    this.groupService.getGroups()
+      .then(groups => this.groups = groups)
+      .then(() => this.groupService.getTasksDistinct()
+        .then(tasks => this.tasks = tasks)
+        .then(() => console.log(this.tasks)))
+      .then(() => console.log((this.groups)))
+      .then(() => this.setPage(1))
       .then(() => this.loaded = true);
   }
 

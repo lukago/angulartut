@@ -31,8 +31,8 @@ export class TaskEditorComponent implements OnInit {
         this.groupService.getTask(+params.get('id')))
       .subscribe(task => {
         this.task = task;
-        this.dateStr =
-          this.datePipe.transform(this.task.startDate, 'yyyy-MM-ddTHH:mm');
+        console.log(this.task);
+        this.dateStr = this.datePipe.transform(Date.now(), 'yyyy-MM-ddTHH:mm');
         this.groupService.getGroups()
           .then(groups => this.groups = groups)
           .then(() => this.group = this.groups.find(gr => gr.id === task.id));
@@ -44,11 +44,12 @@ export class TaskEditorComponent implements OnInit {
   }
 
   saveTaskChanges(): void {
-    if (this.task.title.length < 1 || !this.task.priority || !this.dateStr) {
+    if (this.task.title.length < 1) {
       this.showWrongInputMsg = true;
       return;
     }
 
+    this.showWrongInputMsg = false;
     this.task.startDate = new Date(this.dateStr);
     this.groupService.updateTask(this.task)
       .then(() => this.goBack());

@@ -44,6 +44,7 @@ export class GroupEditorComponent implements OnInit {
       return;
     }
 
+    this.showWrongInputMsg = false;
     this.groupService.updateGroup(this.group)
       .then(() => this.goBack());
   }
